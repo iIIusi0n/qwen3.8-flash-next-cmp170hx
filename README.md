@@ -10,6 +10,8 @@ Tested with 15 GiB RAM, 31 GiB swap, enterprise SATA storage, and a 180 W GPU li
 
 ## Performance
 
+**KLD vs original weights: 0.1208.**
+
 | Workload | Throughput |
 | --- | ---: |
 | Fresh 8K prefill | **2,636 prompt tok/s** |
