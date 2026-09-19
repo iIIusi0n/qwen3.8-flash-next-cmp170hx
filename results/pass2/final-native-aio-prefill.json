@@ -1,0 +1,170 @@
+[
+  {
+    "label": "final-native-aio",
+    "prompt_tokens": 512,
+    "repeat": 0,
+    "latency_s": 0.33389009500388056,
+    "prompt_tokens_s": 1533.4387202892299,
+    "usage": {
+      "prompt_tokens": 512,
+      "total_tokens": 513,
+      "completion_tokens": 1,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": null
+    }
+  },
+  {
+    "label": "final-native-aio",
+    "prompt_tokens": 512,
+    "repeat": 1,
+    "latency_s": 0.3167701889760792,
+    "prompt_tokens_s": 1616.3137120162007,
+    "usage": {
+      "prompt_tokens": 512,
+      "total_tokens": 513,
+      "completion_tokens": 1,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": null
+    }
+  },
+  {
+    "label": "final-native-aio",
+    "prompt_tokens": 512,
+    "repeat": 2,
+    "latency_s": 0.3121658959425986,
+    "prompt_tokens_s": 1640.1535422503268,
+    "usage": {
+      "prompt_tokens": 512,
+      "total_tokens": 513,
+      "completion_tokens": 1,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": null
+    }
+  },
+  {
+    "label": "final-native-aio",
+    "prompt_tokens": 2048,
+    "repeat": 0,
+    "latency_s": 1.069282444077544,
+    "prompt_tokens_s": 1915.3031187814768,
+    "usage": {
+      "prompt_tokens": 2048,
+      "total_tokens": 2049,
+      "completion_tokens": 1,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": null
+    }
+  },
+  {
+    "label": "final-native-aio",
+    "prompt_tokens": 2048,
+    "repeat": 1,
+    "latency_s": 1.07362734596245,
+    "prompt_tokens_s": 1907.5520083405445,
+    "usage": {
+      "prompt_tokens": 2048,
+      "total_tokens": 2049,
+      "completion_tokens": 1,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": null
+    }
+  },
+  {
+    "label": "final-native-aio",
+    "prompt_tokens": 2048,
+    "repeat": 2,
+    "latency_s": 1.034661230049096,
+    "prompt_tokens_s": 1979.391843939895,
+    "usage": {
+      "prompt_tokens": 2048,
+      "total_tokens": 2049,
+      "completion_tokens": 1,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": null
+    }
+  },
+  {
+    "label": "final-native-aio",
+    "prompt_tokens": 8192,
+    "repeat": 0,
+    "latency_s": 3.179718042956665,
+    "prompt_tokens_s": 2576.3290610455065,
+    "usage": {
+      "prompt_tokens": 8192,
+      "total_tokens": 8193,
+      "completion_tokens": 1,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": null
+    }
+  },
+  {
+    "label": "final-native-aio",
+    "prompt_tokens": 8192,
+    "repeat": 1,
+    "latency_s": 3.108220826019533,
+    "prompt_tokens_s": 2635.591374790087,
+    "usage": {
+      "prompt_tokens": 8192,
+      "total_tokens": 8193,
+      "completion_tokens": 1,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": null
+    }
+  },
+  {
+    "label": "final-native-aio",
+    "prompt_tokens": 8192,
+    "repeat": 2,
+    "latency_s": 3.065870124963112,
+    "prompt_tokens_s": 2671.9983776542276,
+    "usage": {
+      "prompt_tokens": 8192,
+      "total_tokens": 8193,
+      "completion_tokens": 1,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": null
+    }
+  },
+  {
+    "label": "final-native-aio",
+    "prompt_tokens": 32768,
+    "repeat": 0,
+    "latency_s": 15.310388727928512,
+    "prompt_tokens_s": 2140.2461153860913,
+    "usage": {
+      "prompt_tokens": 32768,
+      "total_tokens": 32769,
+      "completion_tokens": 1,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": null
+    }
+  },
+  {
+    "label": "final-native-aio",
+    "prompt_tokens": 32768,
+    "repeat": 1,
+    "latency_s": 15.633257396053523,
+    "prompt_tokens_s": 2096.044296454301,
+    "usage": {
+      "prompt_tokens": 32768,
+      "total_tokens": 32769,
+      "completion_tokens": 1,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": null
+    }
+  },
+  {
+    "label": "final-native-aio",
+    "prompt_tokens": 32768,
+    "repeat": 2,
+    "latency_s": 15.371547062997706,
+    "prompt_tokens_s": 2131.730779322722,
+    "usage": {
+      "prompt_tokens": 32768,
+      "total_tokens": 32769,
+      "completion_tokens": 1,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": null
+    }
+  }
+]

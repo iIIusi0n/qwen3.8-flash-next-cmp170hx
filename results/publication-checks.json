@@ -1,0 +1,8 @@
+{
+  "patch_files": 13,
+  "patch_sha256": "09c4e13fbd2b77169a7f8cb28d36242cc6e3916fe9c5a3c25d8e90101a38ccb0",
+  "launcher_matches_measured_command": true,
+  "clean_apply_matches_tested_source": true,
+  "native_compilation": "passed",
+  "hf_metadata_preserved": true
+}

@@ -1,0 +1,86 @@
+[
+  {
+    "label": "aio-pp-graphs",
+    "prompt_tokens": 512,
+    "repeat": 0,
+    "latency_s": 0.3164721169741824,
+    "prompt_tokens_s": 1617.8360510722928,
+    "usage": {
+      "prompt_tokens": 512,
+      "total_tokens": 513,
+      "completion_tokens": 1,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": null
+    }
+  },
+  {
+    "label": "aio-pp-graphs",
+    "prompt_tokens": 512,
+    "repeat": 1,
+    "latency_s": 0.2898244640091434,
+    "prompt_tokens_s": 1766.5865500706916,
+    "usage": {
+      "prompt_tokens": 512,
+      "total_tokens": 513,
+      "completion_tokens": 1,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": null
+    }
+  },
+  {
+    "label": "aio-pp-graphs",
+    "prompt_tokens": 2048,
+    "repeat": 0,
+    "latency_s": 1.0332675810204819,
+    "prompt_tokens_s": 1982.0616049691039,
+    "usage": {
+      "prompt_tokens": 2048,
+      "total_tokens": 2049,
+      "completion_tokens": 1,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": null
+    }
+  },
+  {
+    "label": "aio-pp-graphs",
+    "prompt_tokens": 2048,
+    "repeat": 1,
+    "latency_s": 1.0396945560351014,
+    "prompt_tokens_s": 1969.8092945779135,
+    "usage": {
+      "prompt_tokens": 2048,
+      "total_tokens": 2049,
+      "completion_tokens": 1,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": null
+    }
+  },
+  {
+    "label": "aio-pp-graphs",
+    "prompt_tokens": 8192,
+    "repeat": 0,
+    "latency_s": 3.388631910085678,
+    "prompt_tokens_s": 2417.4947935826035,
+    "usage": {
+      "prompt_tokens": 8192,
+      "total_tokens": 8193,
+      "completion_tokens": 1,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": null
+    }
+  },
+  {
+    "label": "aio-pp-graphs",
+    "prompt_tokens": 8192,
+    "repeat": 1,
+    "latency_s": 3.3791180660482496,
+    "prompt_tokens_s": 2424.301205189978,
+    "usage": {
+      "prompt_tokens": 8192,
+      "total_tokens": 8193,
+      "completion_tokens": 1,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": null
+    }
+  }
+]

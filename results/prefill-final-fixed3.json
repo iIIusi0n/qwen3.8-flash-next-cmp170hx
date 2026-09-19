@@ -1,0 +1,86 @@
+[
+  {
+    "label": "final-fixed3",
+    "prompt_tokens": 512,
+    "repeat": 0,
+    "latency_s": 0.500832631951198,
+    "prompt_tokens_s": 1022.2976047013849,
+    "usage": {
+      "prompt_tokens": 512,
+      "total_tokens": 513,
+      "completion_tokens": 1,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": null
+    }
+  },
+  {
+    "label": "final-fixed3",
+    "prompt_tokens": 512,
+    "repeat": 1,
+    "latency_s": 0.4654126970563084,
+    "prompt_tokens_s": 1100.0989084276212,
+    "usage": {
+      "prompt_tokens": 512,
+      "total_tokens": 513,
+      "completion_tokens": 1,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": null
+    }
+  },
+  {
+    "label": "final-fixed3",
+    "prompt_tokens": 2048,
+    "repeat": 0,
+    "latency_s": 1.5665171960135922,
+    "prompt_tokens_s": 1307.3587734700043,
+    "usage": {
+      "prompt_tokens": 2048,
+      "total_tokens": 2049,
+      "completion_tokens": 1,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": null
+    }
+  },
+  {
+    "label": "final-fixed3",
+    "prompt_tokens": 2048,
+    "repeat": 1,
+    "latency_s": 1.4919510659528896,
+    "prompt_tokens_s": 1372.699176760177,
+    "usage": {
+      "prompt_tokens": 2048,
+      "total_tokens": 2049,
+      "completion_tokens": 1,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": null
+    }
+  },
+  {
+    "label": "final-fixed3",
+    "prompt_tokens": 8192,
+    "repeat": 0,
+    "latency_s": 5.788599390070885,
+    "prompt_tokens_s": 1415.195533146004,
+    "usage": {
+      "prompt_tokens": 8192,
+      "total_tokens": 8193,
+      "completion_tokens": 1,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": null
+    }
+  },
+  {
+    "label": "final-fixed3",
+    "prompt_tokens": 8192,
+    "repeat": 1,
+    "latency_s": 5.733668011031114,
+    "prompt_tokens_s": 1428.7538072032169,
+    "usage": {
+      "prompt_tokens": 8192,
+      "total_tokens": 8193,
+      "completion_tokens": 1,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": null
+    }
+  }
+]

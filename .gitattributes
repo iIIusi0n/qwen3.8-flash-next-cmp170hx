@@ -1,0 +1,3 @@
+# Unified-diff context lines contain required whitespace; keep the tested bytes.
+*.patch -text whitespace=-blank-at-eol
+*.csv text eol=lf

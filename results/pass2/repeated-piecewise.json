@@ -1,0 +1,3314 @@
+[
+  {
+    "id": "chatcmpl-8449d883069bc631",
+    "object": "chat.completion",
+    "created": 1789824618,
+    "model": "Qwen3.8-Flash-Next",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "30",
+          "refusal": null,
+          "annotations": null,
+          "audio": null,
+          "function_call": null,
+          "reasoning": null
+        },
+        "logprobs": {
+          "content": [
+            {
+              "token": "3",
+              "logprob": -1.0815004110336304,
+              "bytes": [
+                51
+              ],
+              "top_logprobs": [
+                {
+                  "token": "3",
+                  "logprob": -1.0815004110336304,
+                  "bytes": [
+                    51
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -1.2065004110336304,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "The",
+                  "logprob": -2.45650053024292,
+                  "bytes": [
+                    84,
+                    104,
+                    101
+                  ]
+                },
+                {
+                  "token": "1",
+                  "logprob": -2.45650053024292,
+                  "bytes": [
+                    49
+                  ]
+                },
+                {
+                  "token": "0",
+                  "logprob": -2.70650053024292,
+                  "bytes": [
+                    48
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "0",
+              "logprob": -0.005543336272239685,
+              "bytes": [
+                48
+              ],
+              "top_logprobs": [
+                {
+                  "token": "0",
+                  "logprob": -0.005543336272239685,
+                  "bytes": [
+                    48
+                  ]
+                },
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -6.380543231964111,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "6",
+                  "logprob": -6.380543231964111,
+                  "bytes": [
+                    54
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -6.880543231964111,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "4",
+                  "logprob": -8.06804370880127,
+                  "bytes": [
+                    52
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "<|im_end|>",
+              "logprob": -0.000634111522231251,
+              "bytes": [
+                60,
+                124,
+                105,
+                109,
+                95,
+                101,
+                110,
+                100,
+                124,
+                62
+              ],
+              "top_logprobs": [
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -0.000634111522231251,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "\n\n",
+                  "logprob": -7.87563419342041,
+                  "bytes": [
+                    10,
+                    10
+                  ]
+                },
+                {
+                  "token": "\n",
+                  "logprob": -9.06313419342041,
+                  "bytes": [
+                    10
+                  ]
+                },
+                {
+                  "token": ".",
+                  "logprob": -10.18813419342041,
+                  "bytes": [
+                    46
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -11.00063419342041,
+                  "bytes": [
+                    50
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "finish_reason": "stop",
+        "stop_reason": null,
+        "token_ids": null,
+        "routed_experts": null
+      }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.29.1rc1.dev402+ga5a30471f.ple1-532bda87",
+    "usage": {
+      "prompt_tokens": 40,
+      "total_tokens": 43,
+      "completion_tokens": 3,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null,
+    "ec_transfer_params": null,
+    "metrics": null
+  },
+  {
+    "id": "chatcmpl-b99fee19fef9637b",
+    "object": "chat.completion",
+    "created": 1789824618,
+    "model": "Qwen3.8-Flash-Next",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "20",
+          "refusal": null,
+          "annotations": null,
+          "audio": null,
+          "function_call": null,
+          "reasoning": null
+        },
+        "logprobs": {
+          "content": [
+            {
+              "token": "2",
+              "logprob": -1.1768250465393066,
+              "bytes": [
+                50
+              ],
+              "top_logprobs": [
+                {
+                  "token": "2",
+                  "logprob": -1.1768250465393066,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "3",
+                  "logprob": -1.1768250465393066,
+                  "bytes": [
+                    51
+                  ]
+                },
+                {
+                  "token": "1",
+                  "logprob": -2.1768250465393066,
+                  "bytes": [
+                    49
+                  ]
+                },
+                {
+                  "token": "The",
+                  "logprob": -2.6768250465393066,
+                  "bytes": [
+                    84,
+                    104,
+                    101
+                  ]
+                },
+                {
+                  "token": "0",
+                  "logprob": -2.6768250465393066,
+                  "bytes": [
+                    48
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "0",
+              "logprob": -0.03569906949996948,
+              "bytes": [
+                48
+              ],
+              "top_logprobs": [
+                {
+                  "token": "0",
+                  "logprob": -0.03569906949996948,
+                  "bytes": [
+                    48
+                  ]
+                },
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -4.160698890686035,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -5.035698890686035,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "4",
+                  "logprob": -5.410698890686035,
+                  "bytes": [
+                    52
+                  ]
+                },
+                {
+                  "token": "6",
+                  "logprob": -6.035698890686035,
+                  "bytes": [
+                    54
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "<|im_end|>",
+              "logprob": -0.0009978797752410173,
+              "bytes": [
+                60,
+                124,
+                105,
+                109,
+                95,
+                101,
+                110,
+                100,
+                124,
+                62
+              ],
+              "top_logprobs": [
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -0.0009978797752410173,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "\n\n",
+                  "logprob": -7.375998020172119,
+                  "bytes": [
+                    10,
+                    10
+                  ]
+                },
+                {
+                  "token": "\n",
+                  "logprob": -9.500997543334961,
+                  "bytes": [
+                    10
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -9.563497543334961,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": ".",
+                  "logprob": -10.063497543334961,
+                  "bytes": [
+                    46
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "finish_reason": "stop",
+        "stop_reason": null,
+        "token_ids": null,
+        "routed_experts": null
+      }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.29.1rc1.dev402+ga5a30471f.ple1-532bda87",
+    "usage": {
+      "prompt_tokens": 40,
+      "total_tokens": 43,
+      "completion_tokens": 3,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null,
+    "ec_transfer_params": null,
+    "metrics": null
+  },
+  {
+    "id": "chatcmpl-aba65047c2c1c0fe",
+    "object": "chat.completion",
+    "created": 1789824618,
+    "model": "Qwen3.8-Flash-Next",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "30",
+          "refusal": null,
+          "annotations": null,
+          "audio": null,
+          "function_call": null,
+          "reasoning": null
+        },
+        "logprobs": {
+          "content": [
+            {
+              "token": "3",
+              "logprob": -1.0635138750076294,
+              "bytes": [
+                51
+              ],
+              "top_logprobs": [
+                {
+                  "token": "3",
+                  "logprob": -1.0635138750076294,
+                  "bytes": [
+                    51
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -1.1885138750076294,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "1",
+                  "logprob": -2.18851375579834,
+                  "bytes": [
+                    49
+                  ]
+                },
+                {
+                  "token": "The",
+                  "logprob": -2.81351375579834,
+                  "bytes": [
+                    84,
+                    104,
+                    101
+                  ]
+                },
+                {
+                  "token": "4",
+                  "logprob": -2.81351375579834,
+                  "bytes": [
+                    52
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "0",
+              "logprob": -0.005355298053473234,
+              "bytes": [
+                48
+              ],
+              "top_logprobs": [
+                {
+                  "token": "0",
+                  "logprob": -0.005355298053473234,
+                  "bytes": [
+                    48
+                  ]
+                },
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -6.255355358123779,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "6",
+                  "logprob": -6.505355358123779,
+                  "bytes": [
+                    54
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -7.005355358123779,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "4",
+                  "logprob": -8.130354881286621,
+                  "bytes": [
+                    52
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "<|im_end|>",
+              "logprob": -0.0004923323867842555,
+              "bytes": [
+                60,
+                124,
+                105,
+                109,
+                95,
+                101,
+                110,
+                100,
+                124,
+                62
+              ],
+              "top_logprobs": [
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -0.0004923323867842555,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "\n\n",
+                  "logprob": -8.000492095947266,
+                  "bytes": [
+                    10,
+                    10
+                  ]
+                },
+                {
+                  "token": "\n",
+                  "logprob": -10.125492095947266,
+                  "bytes": [
+                    10
+                  ]
+                },
+                {
+                  "token": ".",
+                  "logprob": -10.500492095947266,
+                  "bytes": [
+                    46
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -11.125492095947266,
+                  "bytes": [
+                    50
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "finish_reason": "stop",
+        "stop_reason": null,
+        "token_ids": null,
+        "routed_experts": null
+      }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.29.1rc1.dev402+ga5a30471f.ple1-532bda87",
+    "usage": {
+      "prompt_tokens": 40,
+      "total_tokens": 43,
+      "completion_tokens": 3,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null,
+    "ec_transfer_params": null,
+    "metrics": null
+  },
+  {
+    "id": "chatcmpl-9e0a48e07563d2c0",
+    "object": "chat.completion",
+    "created": 1789824618,
+    "model": "Qwen3.8-Flash-Next",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "30",
+          "refusal": null,
+          "annotations": null,
+          "audio": null,
+          "function_call": null,
+          "reasoning": null
+        },
+        "logprobs": {
+          "content": [
+            {
+              "token": "3",
+              "logprob": -1.0566405057907104,
+              "bytes": [
+                51
+              ],
+              "top_logprobs": [
+                {
+                  "token": "3",
+                  "logprob": -1.0566405057907104,
+                  "bytes": [
+                    51
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -1.1816405057907104,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "The",
+                  "logprob": -2.431640625,
+                  "bytes": [
+                    84,
+                    104,
+                    101
+                  ]
+                },
+                {
+                  "token": "1",
+                  "logprob": -2.431640625,
+                  "bytes": [
+                    49
+                  ]
+                },
+                {
+                  "token": "0",
+                  "logprob": -2.931640625,
+                  "bytes": [
+                    48
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "0",
+              "logprob": -0.004539423156529665,
+              "bytes": [
+                48
+              ],
+              "top_logprobs": [
+                {
+                  "token": "0",
+                  "logprob": -0.004539423156529665,
+                  "bytes": [
+                    48
+                  ]
+                },
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -6.629539489746094,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "6",
+                  "logprob": -6.629539489746094,
+                  "bytes": [
+                    54
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -7.004539489746094,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "4",
+                  "logprob": -8.192039489746094,
+                  "bytes": [
+                    52
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "<|im_end|>",
+              "logprob": -0.0006169561529532075,
+              "bytes": [
+                60,
+                124,
+                105,
+                109,
+                95,
+                101,
+                110,
+                100,
+                124,
+                62
+              ],
+              "top_logprobs": [
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -0.0006169561529532075,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "\n\n",
+                  "logprob": -7.750617027282715,
+                  "bytes": [
+                    10,
+                    10
+                  ]
+                },
+                {
+                  "token": "\n",
+                  "logprob": -9.938117027282715,
+                  "bytes": [
+                    10
+                  ]
+                },
+                {
+                  "token": ".",
+                  "logprob": -10.250617027282715,
+                  "bytes": [
+                    46
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -10.938117027282715,
+                  "bytes": [
+                    50
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "finish_reason": "stop",
+        "stop_reason": null,
+        "token_ids": null,
+        "routed_experts": null
+      }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.29.1rc1.dev402+ga5a30471f.ple1-532bda87",
+    "usage": {
+      "prompt_tokens": 40,
+      "total_tokens": 43,
+      "completion_tokens": 3,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null,
+    "ec_transfer_params": null,
+    "metrics": null
+  },
+  {
+    "id": "chatcmpl-85343e1adcce8b6e",
+    "object": "chat.completion",
+    "created": 1789824619,
+    "model": "Qwen3.8-Flash-Next",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "20",
+          "refusal": null,
+          "annotations": null,
+          "audio": null,
+          "function_call": null,
+          "reasoning": null
+        },
+        "logprobs": {
+          "content": [
+            {
+              "token": "2",
+              "logprob": -1.1646430492401123,
+              "bytes": [
+                50
+              ],
+              "top_logprobs": [
+                {
+                  "token": "2",
+                  "logprob": -1.1646430492401123,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "3",
+                  "logprob": -1.1646430492401123,
+                  "bytes": [
+                    51
+                  ]
+                },
+                {
+                  "token": "The",
+                  "logprob": -2.4146430492401123,
+                  "bytes": [
+                    84,
+                    104,
+                    101
+                  ]
+                },
+                {
+                  "token": "1",
+                  "logprob": -2.4146430492401123,
+                  "bytes": [
+                    49
+                  ]
+                },
+                {
+                  "token": "0",
+                  "logprob": -2.7896430492401123,
+                  "bytes": [
+                    48
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "0",
+              "logprob": -0.0331774540245533,
+              "bytes": [
+                48
+              ],
+              "top_logprobs": [
+                {
+                  "token": "0",
+                  "logprob": -0.0331774540245533,
+                  "bytes": [
+                    48
+                  ]
+                },
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -4.158177375793457,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -5.158177375793457,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "4",
+                  "logprob": -5.533177375793457,
+                  "bytes": [
+                    52
+                  ]
+                },
+                {
+                  "token": "6",
+                  "logprob": -6.095677375793457,
+                  "bytes": [
+                    54
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "<|im_end|>",
+              "logprob": -0.0005225961795076728,
+              "bytes": [
+                60,
+                124,
+                105,
+                109,
+                95,
+                101,
+                110,
+                100,
+                124,
+                62
+              ],
+              "top_logprobs": [
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -0.0005225961795076728,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "\n\n",
+                  "logprob": -8.43802261352539,
+                  "bytes": [
+                    10,
+                    10
+                  ]
+                },
+                {
+                  "token": "\n",
+                  "logprob": -9.25052261352539,
+                  "bytes": [
+                    10
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -10.06302261352539,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "0",
+                  "logprob": -10.43802261352539,
+                  "bytes": [
+                    48
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "finish_reason": "stop",
+        "stop_reason": null,
+        "token_ids": null,
+        "routed_experts": null
+      }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.29.1rc1.dev402+ga5a30471f.ple1-532bda87",
+    "usage": {
+      "prompt_tokens": 40,
+      "total_tokens": 43,
+      "completion_tokens": 3,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null,
+    "ec_transfer_params": null,
+    "metrics": null
+  },
+  {
+    "id": "chatcmpl-ba5137190c8b099d",
+    "object": "chat.completion",
+    "created": 1789824619,
+    "model": "Qwen3.8-Flash-Next",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "30",
+          "refusal": null,
+          "annotations": null,
+          "audio": null,
+          "function_call": null,
+          "reasoning": null
+        },
+        "logprobs": {
+          "content": [
+            {
+              "token": "3",
+              "logprob": -1.1442410945892334,
+              "bytes": [
+                51
+              ],
+              "top_logprobs": [
+                {
+                  "token": "3",
+                  "logprob": -1.1442410945892334,
+                  "bytes": [
+                    51
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -1.2692410945892334,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "1",
+                  "logprob": -2.1442410945892334,
+                  "bytes": [
+                    49
+                  ]
+                },
+                {
+                  "token": "The",
+                  "logprob": -2.5192410945892334,
+                  "bytes": [
+                    84,
+                    104,
+                    101
+                  ]
+                },
+                {
+                  "token": "0",
+                  "logprob": -2.6442410945892334,
+                  "bytes": [
+                    48
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "0",
+              "logprob": -0.005445409100502729,
+              "bytes": [
+                48
+              ],
+              "top_logprobs": [
+                {
+                  "token": "0",
+                  "logprob": -0.005445409100502729,
+                  "bytes": [
+                    48
+                  ]
+                },
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -6.38044548034668,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "6",
+                  "logprob": -6.38044548034668,
+                  "bytes": [
+                    54
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -6.88044548034668,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "4",
+                  "logprob": -8.13044548034668,
+                  "bytes": [
+                    52
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "<|im_end|>",
+              "logprob": -0.0004188137245364487,
+              "bytes": [
+                60,
+                124,
+                105,
+                109,
+                95,
+                101,
+                110,
+                100,
+                124,
+                62
+              ],
+              "top_logprobs": [
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -0.0004188137245364487,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "\n\n",
+                  "logprob": -8.250418663024902,
+                  "bytes": [
+                    10,
+                    10
+                  ]
+                },
+                {
+                  "token": "\n",
+                  "logprob": -10.125418663024902,
+                  "bytes": [
+                    10
+                  ]
+                },
+                {
+                  "token": ".",
+                  "logprob": -10.625418663024902,
+                  "bytes": [
+                    46
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -11.187918663024902,
+                  "bytes": [
+                    50
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "finish_reason": "stop",
+        "stop_reason": null,
+        "token_ids": null,
+        "routed_experts": null
+      }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.29.1rc1.dev402+ga5a30471f.ple1-532bda87",
+    "usage": {
+      "prompt_tokens": 40,
+      "total_tokens": 43,
+      "completion_tokens": 3,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null,
+    "ec_transfer_params": null,
+    "metrics": null
+  },
+  {
+    "id": "chatcmpl-8f239a9e6130894c",
+    "object": "chat.completion",
+    "created": 1789824619,
+    "model": "Qwen3.8-Flash-Next",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "30",
+          "refusal": null,
+          "annotations": null,
+          "audio": null,
+          "function_call": null,
+          "reasoning": null
+        },
+        "logprobs": {
+          "content": [
+            {
+              "token": "3",
+              "logprob": -1.0242265462875366,
+              "bytes": [
+                51
+              ],
+              "top_logprobs": [
+                {
+                  "token": "3",
+                  "logprob": -1.0242265462875366,
+                  "bytes": [
+                    51
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -1.2742265462875366,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "1",
+                  "logprob": -2.274226665496826,
+                  "bytes": [
+                    49
+                  ]
+                },
+                {
+                  "token": "The",
+                  "logprob": -2.524226665496826,
+                  "bytes": [
+                    84,
+                    104,
+                    101
+                  ]
+                },
+                {
+                  "token": "0",
+                  "logprob": -2.899226665496826,
+                  "bytes": [
+                    48
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "0",
+              "logprob": -0.0052520157769322395,
+              "bytes": [
+                48
+              ],
+              "top_logprobs": [
+                {
+                  "token": "0",
+                  "logprob": -0.0052520157769322395,
+                  "bytes": [
+                    48
+                  ]
+                },
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -6.255251884460449,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "6",
+                  "logprob": -6.630251884460449,
+                  "bytes": [
+                    54
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -6.880251884460449,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "4",
+                  "logprob": -8.19275188446045,
+                  "bytes": [
+                    52
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "<|im_end|>",
+              "logprob": -0.00042989550274796784,
+              "bytes": [
+                60,
+                124,
+                105,
+                109,
+                95,
+                101,
+                110,
+                100,
+                124,
+                62
+              ],
+              "top_logprobs": [
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -0.00042989550274796784,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "\n\n",
+                  "logprob": -8.2504301071167,
+                  "bytes": [
+                    10,
+                    10
+                  ]
+                },
+                {
+                  "token": "\n",
+                  "logprob": -9.9379301071167,
+                  "bytes": [
+                    10
+                  ]
+                },
+                {
+                  "token": ".",
+                  "logprob": -10.5629301071167,
+                  "bytes": [
+                    46
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -11.0629301071167,
+                  "bytes": [
+                    50
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "finish_reason": "stop",
+        "stop_reason": null,
+        "token_ids": null,
+        "routed_experts": null
+      }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.29.1rc1.dev402+ga5a30471f.ple1-532bda87",
+    "usage": {
+      "prompt_tokens": 40,
+      "total_tokens": 43,
+      "completion_tokens": 3,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null,
+    "ec_transfer_params": null,
+    "metrics": null
+  },
+  {
+    "id": "chatcmpl-b69c15d863c161c2",
+    "object": "chat.completion",
+    "created": 1789824619,
+    "model": "Qwen3.8-Flash-Next",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "30",
+          "refusal": null,
+          "annotations": null,
+          "audio": null,
+          "function_call": null,
+          "reasoning": null
+        },
+        "logprobs": {
+          "content": [
+            {
+              "token": "3",
+              "logprob": -1.1939185857772827,
+              "bytes": [
+                51
+              ],
+              "top_logprobs": [
+                {
+                  "token": "3",
+                  "logprob": -1.1939185857772827,
+                  "bytes": [
+                    51
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -1.3189185857772827,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "1",
+                  "logprob": -2.0689187049865723,
+                  "bytes": [
+                    49
+                  ]
+                },
+                {
+                  "token": "The",
+                  "logprob": -2.4439187049865723,
+                  "bytes": [
+                    84,
+                    104,
+                    101
+                  ]
+                },
+                {
+                  "token": "0",
+                  "logprob": -2.4439187049865723,
+                  "bytes": [
+                    48
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "0",
+              "logprob": -0.005039014853537083,
+              "bytes": [
+                48
+              ],
+              "top_logprobs": [
+                {
+                  "token": "0",
+                  "logprob": -0.005039014853537083,
+                  "bytes": [
+                    48
+                  ]
+                },
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -6.380039215087891,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "6",
+                  "logprob": -6.505039215087891,
+                  "bytes": [
+                    54
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -7.005039215087891,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "4",
+                  "logprob": -8.19253921508789,
+                  "bytes": [
+                    52
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "<|im_end|>",
+              "logprob": -0.00041631137719377875,
+              "bytes": [
+                60,
+                124,
+                105,
+                109,
+                95,
+                101,
+                110,
+                100,
+                124,
+                62
+              ],
+              "top_logprobs": [
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -0.00041631137719377875,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "\n\n",
+                  "logprob": -8.25041675567627,
+                  "bytes": [
+                    10,
+                    10
+                  ]
+                },
+                {
+                  "token": "\n",
+                  "logprob": -10.00041675567627,
+                  "bytes": [
+                    10
+                  ]
+                },
+                {
+                  "token": ".",
+                  "logprob": -10.56291675567627,
+                  "bytes": [
+                    46
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -11.18791675567627,
+                  "bytes": [
+                    50
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "finish_reason": "stop",
+        "stop_reason": null,
+        "token_ids": null,
+        "routed_experts": null
+      }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.29.1rc1.dev402+ga5a30471f.ple1-532bda87",
+    "usage": {
+      "prompt_tokens": 40,
+      "total_tokens": 43,
+      "completion_tokens": 3,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null,
+    "ec_transfer_params": null,
+    "metrics": null
+  },
+  {
+    "id": "chatcmpl-a5a09e814a018c3c",
+    "object": "chat.completion",
+    "created": 1789824619,
+    "model": "Qwen3.8-Flash-Next",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "30",
+          "refusal": null,
+          "annotations": null,
+          "audio": null,
+          "function_call": null,
+          "reasoning": null
+        },
+        "logprobs": {
+          "content": [
+            {
+              "token": "3",
+              "logprob": -1.0856902599334717,
+              "bytes": [
+                51
+              ],
+              "top_logprobs": [
+                {
+                  "token": "3",
+                  "logprob": -1.0856902599334717,
+                  "bytes": [
+                    51
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -1.2106902599334717,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "1",
+                  "logprob": -2.2106902599334717,
+                  "bytes": [
+                    49
+                  ]
+                },
+                {
+                  "token": "The",
+                  "logprob": -2.5856902599334717,
+                  "bytes": [
+                    84,
+                    104,
+                    101
+                  ]
+                },
+                {
+                  "token": "0",
+                  "logprob": -2.7106902599334717,
+                  "bytes": [
+                    48
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "0",
+              "logprob": -0.00494946027174592,
+              "bytes": [
+                48
+              ],
+              "top_logprobs": [
+                {
+                  "token": "0",
+                  "logprob": -0.00494946027174592,
+                  "bytes": [
+                    48
+                  ]
+                },
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -6.379949569702148,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "6",
+                  "logprob": -6.629949569702148,
+                  "bytes": [
+                    54
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -7.004949569702148,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "4",
+                  "logprob": -8.129949569702148,
+                  "bytes": [
+                    52
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "<|im_end|>",
+              "logprob": -0.0006252956227399409,
+              "bytes": [
+                60,
+                124,
+                105,
+                109,
+                95,
+                101,
+                110,
+                100,
+                124,
+                62
+              ],
+              "top_logprobs": [
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -0.0006252956227399409,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "\n\n",
+                  "logprob": -7.750625133514404,
+                  "bytes": [
+                    10,
+                    10
+                  ]
+                },
+                {
+                  "token": "\n",
+                  "logprob": -9.688125610351562,
+                  "bytes": [
+                    10
+                  ]
+                },
+                {
+                  "token": ".",
+                  "logprob": -10.438125610351562,
+                  "bytes": [
+                    46
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -11.000625610351562,
+                  "bytes": [
+                    50
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "finish_reason": "stop",
+        "stop_reason": null,
+        "token_ids": null,
+        "routed_experts": null
+      }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.29.1rc1.dev402+ga5a30471f.ple1-532bda87",
+    "usage": {
+      "prompt_tokens": 40,
+      "total_tokens": 43,
+      "completion_tokens": 3,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null,
+    "ec_transfer_params": null,
+    "metrics": null
+  },
+  {
+    "id": "chatcmpl-b8c726194abe86a3",
+    "object": "chat.completion",
+    "created": 1789824619,
+    "model": "Qwen3.8-Flash-Next",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "20",
+          "refusal": null,
+          "annotations": null,
+          "audio": null,
+          "function_call": null,
+          "reasoning": null
+        },
+        "logprobs": {
+          "content": [
+            {
+              "token": "2",
+              "logprob": -1.1932190656661987,
+              "bytes": [
+                50
+              ],
+              "top_logprobs": [
+                {
+                  "token": "2",
+                  "logprob": -1.1932190656661987,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "3",
+                  "logprob": -1.1932190656661987,
+                  "bytes": [
+                    51
+                  ]
+                },
+                {
+                  "token": "1",
+                  "logprob": -2.1932191848754883,
+                  "bytes": [
+                    49
+                  ]
+                },
+                {
+                  "token": "The",
+                  "logprob": -2.5682191848754883,
+                  "bytes": [
+                    84,
+                    104,
+                    101
+                  ]
+                },
+                {
+                  "token": "0",
+                  "logprob": -2.5682191848754883,
+                  "bytes": [
+                    48
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "0",
+              "logprob": -0.034326642751693726,
+              "bytes": [
+                48
+              ],
+              "top_logprobs": [
+                {
+                  "token": "0",
+                  "logprob": -0.034326642751693726,
+                  "bytes": [
+                    48
+                  ]
+                },
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -4.159326553344727,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -5.159326553344727,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "4",
+                  "logprob": -5.409326553344727,
+                  "bytes": [
+                    52
+                  ]
+                },
+                {
+                  "token": "6",
+                  "logprob": -6.096826553344727,
+                  "bytes": [
+                    54
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "<|im_end|>",
+              "logprob": -0.0005922947311773896,
+              "bytes": [
+                60,
+                124,
+                105,
+                109,
+                95,
+                101,
+                110,
+                100,
+                124,
+                62
+              ],
+              "top_logprobs": [
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -0.0005922947311773896,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "\n\n",
+                  "logprob": -8.250592231750488,
+                  "bytes": [
+                    10,
+                    10
+                  ]
+                },
+                {
+                  "token": "\n",
+                  "logprob": -9.563092231750488,
+                  "bytes": [
+                    10
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -9.688092231750488,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": ".",
+                  "logprob": -10.375592231750488,
+                  "bytes": [
+                    46
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "finish_reason": "stop",
+        "stop_reason": null,
+        "token_ids": null,
+        "routed_experts": null
+      }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.29.1rc1.dev402+ga5a30471f.ple1-532bda87",
+    "usage": {
+      "prompt_tokens": 40,
+      "total_tokens": 43,
+      "completion_tokens": 3,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null,
+    "ec_transfer_params": null,
+    "metrics": null
+  },
+  {
+    "id": "chatcmpl-a0f51b2d3ede3562",
+    "object": "chat.completion",
+    "created": 1789824620,
+    "model": "Qwen3.8-Flash-Next",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "30",
+          "refusal": null,
+          "annotations": null,
+          "audio": null,
+          "function_call": null,
+          "reasoning": null
+        },
+        "logprobs": {
+          "content": [
+            {
+              "token": "3",
+              "logprob": -1.15218985080719,
+              "bytes": [
+                51
+              ],
+              "top_logprobs": [
+                {
+                  "token": "3",
+                  "logprob": -1.15218985080719,
+                  "bytes": [
+                    51
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -1.27718985080719,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "1",
+                  "logprob": -2.1521897315979004,
+                  "bytes": [
+                    49
+                  ]
+                },
+                {
+                  "token": "The",
+                  "logprob": -2.4021897315979004,
+                  "bytes": [
+                    84,
+                    104,
+                    101
+                  ]
+                },
+                {
+                  "token": "4",
+                  "logprob": -2.6521897315979004,
+                  "bytes": [
+                    52
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "0",
+              "logprob": -0.0047288015484809875,
+              "bytes": [
+                48
+              ],
+              "top_logprobs": [
+                {
+                  "token": "0",
+                  "logprob": -0.0047288015484809875,
+                  "bytes": [
+                    48
+                  ]
+                },
+                {
+                  "token": "6",
+                  "logprob": -6.5047287940979,
+                  "bytes": [
+                    54
+                  ]
+                },
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -6.6297287940979,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -7.0047287940979,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "4",
+                  "logprob": -8.067229270935059,
+                  "bytes": [
+                    52
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "<|im_end|>",
+              "logprob": -0.0006369707407429814,
+              "bytes": [
+                60,
+                124,
+                105,
+                109,
+                95,
+                101,
+                110,
+                100,
+                124,
+                62
+              ],
+              "top_logprobs": [
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -0.0006369707407429814,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "\n\n",
+                  "logprob": -7.750637054443359,
+                  "bytes": [
+                    10,
+                    10
+                  ]
+                },
+                {
+                  "token": "\n",
+                  "logprob": -9.50063705444336,
+                  "bytes": [
+                    10
+                  ]
+                },
+                {
+                  "token": ".",
+                  "logprob": -10.25063705444336,
+                  "bytes": [
+                    46
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -11.18813705444336,
+                  "bytes": [
+                    50
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "finish_reason": "stop",
+        "stop_reason": null,
+        "token_ids": null,
+        "routed_experts": null
+      }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.29.1rc1.dev402+ga5a30471f.ple1-532bda87",
+    "usage": {
+      "prompt_tokens": 40,
+      "total_tokens": 43,
+      "completion_tokens": 3,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null,
+    "ec_transfer_params": null,
+    "metrics": null
+  },
+  {
+    "id": "chatcmpl-bc998053021885e1",
+    "object": "chat.completion",
+    "created": 1789824620,
+    "model": "Qwen3.8-Flash-Next",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "20",
+          "refusal": null,
+          "annotations": null,
+          "audio": null,
+          "function_call": null,
+          "reasoning": null
+        },
+        "logprobs": {
+          "content": [
+            {
+              "token": "2",
+              "logprob": -1.1536575555801392,
+              "bytes": [
+                50
+              ],
+              "top_logprobs": [
+                {
+                  "token": "2",
+                  "logprob": -1.1536575555801392,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "3",
+                  "logprob": -1.2786575555801392,
+                  "bytes": [
+                    51
+                  ]
+                },
+                {
+                  "token": "1",
+                  "logprob": -2.1536574363708496,
+                  "bytes": [
+                    49
+                  ]
+                },
+                {
+                  "token": "The",
+                  "logprob": -2.5286574363708496,
+                  "bytes": [
+                    84,
+                    104,
+                    101
+                  ]
+                },
+                {
+                  "token": "0",
+                  "logprob": -2.5286574363708496,
+                  "bytes": [
+                    48
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "0",
+              "logprob": -0.034465547651052475,
+              "bytes": [
+                48
+              ],
+              "top_logprobs": [
+                {
+                  "token": "0",
+                  "logprob": -0.034465547651052475,
+                  "bytes": [
+                    48
+                  ]
+                },
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -4.159465312957764,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -5.159465312957764,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "4",
+                  "logprob": -5.409465312957764,
+                  "bytes": [
+                    52
+                  ]
+                },
+                {
+                  "token": "6",
+                  "logprob": -6.034465312957764,
+                  "bytes": [
+                    54
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "<|im_end|>",
+              "logprob": -0.0005779979983344674,
+              "bytes": [
+                60,
+                124,
+                105,
+                109,
+                95,
+                101,
+                110,
+                100,
+                124,
+                62
+              ],
+              "top_logprobs": [
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -0.0005779979983344674,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "\n\n",
+                  "logprob": -8.125577926635742,
+                  "bytes": [
+                    10,
+                    10
+                  ]
+                },
+                {
+                  "token": "\n",
+                  "logprob": -9.688077926635742,
+                  "bytes": [
+                    10
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -10.000577926635742,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "0",
+                  "logprob": -10.375577926635742,
+                  "bytes": [
+                    48
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "finish_reason": "stop",
+        "stop_reason": null,
+        "token_ids": null,
+        "routed_experts": null
+      }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.29.1rc1.dev402+ga5a30471f.ple1-532bda87",
+    "usage": {
+      "prompt_tokens": 40,
+      "total_tokens": 43,
+      "completion_tokens": 3,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null,
+    "ec_transfer_params": null,
+    "metrics": null
+  },
+  {
+    "id": "chatcmpl-a5bd62bc61879fd9",
+    "object": "chat.completion",
+    "created": 1789824620,
+    "model": "Qwen3.8-Flash-Next",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "20",
+          "refusal": null,
+          "annotations": null,
+          "audio": null,
+          "function_call": null,
+          "reasoning": null
+        },
+        "logprobs": {
+          "content": [
+            {
+              "token": "2",
+              "logprob": -1.1712050437927246,
+              "bytes": [
+                50
+              ],
+              "top_logprobs": [
+                {
+                  "token": "2",
+                  "logprob": -1.1712050437927246,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "3",
+                  "logprob": -1.1712050437927246,
+                  "bytes": [
+                    51
+                  ]
+                },
+                {
+                  "token": "1",
+                  "logprob": -2.2962050437927246,
+                  "bytes": [
+                    49
+                  ]
+                },
+                {
+                  "token": "The",
+                  "logprob": -2.5462050437927246,
+                  "bytes": [
+                    84,
+                    104,
+                    101
+                  ]
+                },
+                {
+                  "token": "0",
+                  "logprob": -2.5462050437927246,
+                  "bytes": [
+                    48
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "0",
+              "logprob": -0.03437409549951553,
+              "bytes": [
+                48
+              ],
+              "top_logprobs": [
+                {
+                  "token": "0",
+                  "logprob": -0.03437409549951553,
+                  "bytes": [
+                    48
+                  ]
+                },
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -4.284374237060547,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -5.034374237060547,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "4",
+                  "logprob": -5.409374237060547,
+                  "bytes": [
+                    52
+                  ]
+                },
+                {
+                  "token": "6",
+                  "logprob": -5.909374237060547,
+                  "bytes": [
+                    54
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "<|im_end|>",
+              "logprob": -0.0007446615491062403,
+              "bytes": [
+                60,
+                124,
+                105,
+                109,
+                95,
+                101,
+                110,
+                100,
+                124,
+                62
+              ],
+              "top_logprobs": [
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -0.0007446615491062403,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "\n\n",
+                  "logprob": -7.750744819641113,
+                  "bytes": [
+                    10,
+                    10
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -9.750744819641113,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "\n",
+                  "logprob": -9.813244819641113,
+                  "bytes": [
+                    10
+                  ]
+                },
+                {
+                  "token": ".",
+                  "logprob": -10.188244819641113,
+                  "bytes": [
+                    46
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "finish_reason": "stop",
+        "stop_reason": null,
+        "token_ids": null,
+        "routed_experts": null
+      }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.29.1rc1.dev402+ga5a30471f.ple1-532bda87",
+    "usage": {
+      "prompt_tokens": 40,
+      "total_tokens": 43,
+      "completion_tokens": 3,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null,
+    "ec_transfer_params": null,
+    "metrics": null
+  },
+  {
+    "id": "chatcmpl-ad8267466e47ab76",
+    "object": "chat.completion",
+    "created": 1789824620,
+    "model": "Qwen3.8-Flash-Next",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "30",
+          "refusal": null,
+          "annotations": null,
+          "audio": null,
+          "function_call": null,
+          "reasoning": null
+        },
+        "logprobs": {
+          "content": [
+            {
+              "token": "3",
+              "logprob": -1.0460009574890137,
+              "bytes": [
+                51
+              ],
+              "top_logprobs": [
+                {
+                  "token": "3",
+                  "logprob": -1.0460009574890137,
+                  "bytes": [
+                    51
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -1.2960009574890137,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "The",
+                  "logprob": -2.2960009574890137,
+                  "bytes": [
+                    84,
+                    104,
+                    101
+                  ]
+                },
+                {
+                  "token": "1",
+                  "logprob": -2.4210009574890137,
+                  "bytes": [
+                    49
+                  ]
+                },
+                {
+                  "token": "0",
+                  "logprob": -2.7960009574890137,
+                  "bytes": [
+                    48
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "0",
+              "logprob": -0.005964338313788176,
+              "bytes": [
+                48
+              ],
+              "top_logprobs": [
+                {
+                  "token": "0",
+                  "logprob": -0.005964338313788176,
+                  "bytes": [
+                    48
+                  ]
+                },
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -6.130964279174805,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "6",
+                  "logprob": -6.380964279174805,
+                  "bytes": [
+                    54
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -6.880964279174805,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "4",
+                  "logprob": -8.130964279174805,
+                  "bytes": [
+                    52
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "<|im_end|>",
+              "logprob": -0.000448841426987201,
+              "bytes": [
+                60,
+                124,
+                105,
+                109,
+                95,
+                101,
+                110,
+                100,
+                124,
+                62
+              ],
+              "top_logprobs": [
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -0.000448841426987201,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "\n\n",
+                  "logprob": -8.125449180603027,
+                  "bytes": [
+                    10,
+                    10
+                  ]
+                },
+                {
+                  "token": "\n",
+                  "logprob": -10.187949180603027,
+                  "bytes": [
+                    10
+                  ]
+                },
+                {
+                  "token": ".",
+                  "logprob": -10.437949180603027,
+                  "bytes": [
+                    46
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -11.250449180603027,
+                  "bytes": [
+                    50
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "finish_reason": "stop",
+        "stop_reason": null,
+        "token_ids": null,
+        "routed_experts": null
+      }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.29.1rc1.dev402+ga5a30471f.ple1-532bda87",
+    "usage": {
+      "prompt_tokens": 40,
+      "total_tokens": 43,
+      "completion_tokens": 3,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null,
+    "ec_transfer_params": null,
+    "metrics": null
+  },
+  {
+    "id": "chatcmpl-8d5284a8dda1f309",
+    "object": "chat.completion",
+    "created": 1789824620,
+    "model": "Qwen3.8-Flash-Next",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "30",
+          "refusal": null,
+          "annotations": null,
+          "audio": null,
+          "function_call": null,
+          "reasoning": null
+        },
+        "logprobs": {
+          "content": [
+            {
+              "token": "3",
+              "logprob": -1.0112617015838623,
+              "bytes": [
+                51
+              ],
+              "top_logprobs": [
+                {
+                  "token": "3",
+                  "logprob": -1.0112617015838623,
+                  "bytes": [
+                    51
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -1.2612617015838623,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "1",
+                  "logprob": -2.3862617015838623,
+                  "bytes": [
+                    49
+                  ]
+                },
+                {
+                  "token": "The",
+                  "logprob": -2.6362617015838623,
+                  "bytes": [
+                    84,
+                    104,
+                    101
+                  ]
+                },
+                {
+                  "token": "0",
+                  "logprob": -2.7612617015838623,
+                  "bytes": [
+                    48
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "0",
+              "logprob": -0.005129510071128607,
+              "bytes": [
+                48
+              ],
+              "top_logprobs": [
+                {
+                  "token": "0",
+                  "logprob": -0.005129510071128607,
+                  "bytes": [
+                    48
+                  ]
+                },
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -6.380129337310791,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "6",
+                  "logprob": -6.505129337310791,
+                  "bytes": [
+                    54
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -7.005129337310791,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "4",
+                  "logprob": -8.19262981414795,
+                  "bytes": [
+                    52
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "<|im_end|>",
+              "logprob": -0.0005474975914694369,
+              "bytes": [
+                60,
+                124,
+                105,
+                109,
+                95,
+                101,
+                110,
+                100,
+                124,
+                62
+              ],
+              "top_logprobs": [
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -0.0005474975914694369,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "\n\n",
+                  "logprob": -7.875547409057617,
+                  "bytes": [
+                    10,
+                    10
+                  ]
+                },
+                {
+                  "token": "\n",
+                  "logprob": -9.813047409057617,
+                  "bytes": [
+                    10
+                  ]
+                },
+                {
+                  "token": ".",
+                  "logprob": -10.438047409057617,
+                  "bytes": [
+                    46
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -11.375547409057617,
+                  "bytes": [
+                    50
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "finish_reason": "stop",
+        "stop_reason": null,
+        "token_ids": null,
+        "routed_experts": null
+      }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.29.1rc1.dev402+ga5a30471f.ple1-532bda87",
+    "usage": {
+      "prompt_tokens": 40,
+      "total_tokens": 43,
+      "completion_tokens": 3,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null,
+    "ec_transfer_params": null,
+    "metrics": null
+  },
+  {
+    "id": "chatcmpl-976adbc3a11e74dc",
+    "object": "chat.completion",
+    "created": 1789824621,
+    "model": "Qwen3.8-Flash-Next",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "30",
+          "refusal": null,
+          "annotations": null,
+          "audio": null,
+          "function_call": null,
+          "reasoning": null
+        },
+        "logprobs": {
+          "content": [
+            {
+              "token": "3",
+              "logprob": -1.1188931465148926,
+              "bytes": [
+                51
+              ],
+              "top_logprobs": [
+                {
+                  "token": "3",
+                  "logprob": -1.1188931465148926,
+                  "bytes": [
+                    51
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -1.2438931465148926,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "1",
+                  "logprob": -2.1188931465148926,
+                  "bytes": [
+                    49
+                  ]
+                },
+                {
+                  "token": "The",
+                  "logprob": -2.6188931465148926,
+                  "bytes": [
+                    84,
+                    104,
+                    101
+                  ]
+                },
+                {
+                  "token": "0",
+                  "logprob": -2.7438931465148926,
+                  "bytes": [
+                    48
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "0",
+              "logprob": -0.004878404084593058,
+              "bytes": [
+                48
+              ],
+              "top_logprobs": [
+                {
+                  "token": "0",
+                  "logprob": -0.004878404084593058,
+                  "bytes": [
+                    48
+                  ]
+                },
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -6.379878520965576,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "6",
+                  "logprob": -6.504878520965576,
+                  "bytes": [
+                    54
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -7.129878520965576,
+                  "bytes": [
+                    50
+                  ]
+                },
+                {
+                  "token": "4",
+                  "logprob": -8.254878044128418,
+                  "bytes": [
+                    52
+                  ]
+                }
+              ]
+            },
+            {
+              "token": "<|im_end|>",
+              "logprob": -0.0008208957733586431,
+              "bytes": [
+                60,
+                124,
+                105,
+                109,
+                95,
+                101,
+                110,
+                100,
+                124,
+                62
+              ],
+              "top_logprobs": [
+                {
+                  "token": "<|im_end|>",
+                  "logprob": -0.0008208957733586431,
+                  "bytes": [
+                    60,
+                    124,
+                    105,
+                    109,
+                    95,
+                    101,
+                    110,
+                    100,
+                    124,
+                    62
+                  ]
+                },
+                {
+                  "token": "\n\n",
+                  "logprob": -7.375821113586426,
+                  "bytes": [
+                    10,
+                    10
+                  ]
+                },
+                {
+                  "token": "\n",
+                  "logprob": -9.688321113586426,
+                  "bytes": [
+                    10
+                  ]
+                },
+                {
+                  "token": ".",
+                  "logprob": -10.438321113586426,
+                  "bytes": [
+                    46
+                  ]
+                },
+                {
+                  "token": "2",
+                  "logprob": -10.938321113586426,
+                  "bytes": [
+                    50
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "finish_reason": "stop",
+        "stop_reason": null,
+        "token_ids": null,
+        "routed_experts": null
+      }
+    ],
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.29.1rc1.dev402+ga5a30471f.ple1-532bda87",
+    "usage": {
+      "prompt_tokens": 40,
+      "total_tokens": 43,
+      "completion_tokens": 3,
+      "prompt_tokens_details": null,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null,
+    "ec_transfer_params": null,
+    "metrics": null
+  }
+]

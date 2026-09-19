@@ -1,0 +1,9 @@
+# Core versions in the measured deployment; the wheel supplies remaining dependencies.
+torch==2.13.0
+transformers==5.17.0
+humming-kernels==0.1.12
+numpy==2.3.5
+triton==3.7.1
+flashinfer-python==0.6.18.post1
+huggingface-hub==1.32.0
+setuptools==80.10.2

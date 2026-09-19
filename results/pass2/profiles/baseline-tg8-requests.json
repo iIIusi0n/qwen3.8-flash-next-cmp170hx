@@ -1,0 +1,126 @@
+{
+  "name": "baseline-tg8",
+  "elapsed_s": 5.968488311977126,
+  "results": [
+    {
+      "kind": "tg",
+      "elapsed_s": 5.00650352507364,
+      "ttft_s": 0.38927306898403913,
+      "decode_tokens_s": 55.227912582029354,
+      "usage": {
+        "prompt_tokens": 28,
+        "total_tokens": 284,
+        "completion_tokens": 256,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "output": "A database index speeds up lookups by creating a separate, optimized data structure that allows the database engine to find specific rows without scanning the entire table. This is analogous to the index at the back of a textbook: instead of reading every page to find a topic, you look up the topic in the index, which points you directly to the page number.\n\n### How It Works\n\n1. **Without an Index (Full Table Scan)**:\n   - The database must read every row in the table sequentially to find the matching record.\n   - This is slow, especially for large tables, because it requires reading all data from disk into memory.\n   - Time complexity: **O(n)**, where *n* is the number of rows.\n\n2. **With an Index**:\n   - The database maintains a separate structure (typically a **B-Tree** or **Hash Index**) that stores the indexed column values along with pointers to the actual rows.\n   - The index is sorted (in the case of B-Trees), allowing the database to perform a binary search or tree traversal to locate the value quickly.\n   - Time complexity: **O(log n)** for B-Trees, or **O(1)** for Hash Indexes.\n\n"
+    },
+    {
+      "kind": "tg",
+      "elapsed_s": 4.045224266010337,
+      "ttft_s": 0.4500249410048127,
+      "decode_tokens_s": 70.92791718846026,
+      "usage": {
+        "prompt_tokens": 26,
+        "total_tokens": 282,
+        "completion_tokens": 256,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "output": "```python\ndef merge_sorted_lists(list1: list, list2: list) -> list:\n    \"\"\"\n    Merge two sorted lists into a single sorted list.\n    \n    Args:\n        list1: First sorted list\n        list2: Second sorted list\n    \n    Returns:\n        A new sorted list containing all elements from both input lists\n    \"\"\"\n    merged = []\n    i, j = 0, 0\n    \n    # Compare elements from both lists and append the smaller one\n    while i < len(list1) and j < len(list2):\n        if list1[i] <= list2[j]:\n            merged.append(list1[i])\n            i += 1\n        else:\n            merged.append(list2[j])\n            j += 1\n    \n    # Append remaining elements from list1\n    while i < len(list1):\n        merged.append(list1[i])\n        i += 1\n    \n    # Append remaining elements from list2\n    while j < len(list2):\n        merged.append(list2[j])\n        j += 1\n    \n    return merged\n```\n<|im_start|><|im_start|><|im_start|><|im_start|><|im_start|><|im_start|><|im_start|><|im_start|><|im_start|><|im_start|><|im_start|><|im_start|><|im_start|><|im_start|><|im_start|><|im_start|><|im_start|><|im_start|>"
+    },
+    {
+      "kind": "tg",
+      "elapsed_s": 5.400235884007998,
+      "ttft_s": 0.4497090340591967,
+      "decode_tokens_s": 51.50966911787121,
+      "usage": {
+        "prompt_tokens": 26,
+        "total_tokens": 282,
+        "completion_tokens": 256,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "output": "Okay, so imagine sunlight is basically a mix of all the colors of the rainbow\u2014red, orange, yellow, green, blue, indigo, violet. When that light hits Earth\u2019s atmosphere, it runs into tiny gas molecules (mostly nitrogen and oxygen).\n\nHere\u2019s the key part: **blue light scatters way more easily than red light.**\n\nThink of it like this:\n- **Red light** is like a big, heavy truck. It\u2019s long and straight, so it mostly just drives straight through the atmosphere without getting bumped around much.\n- **Blue light** is like a tiny, bouncy ball. It\u2019s short and wiggly, so when it hits those gas molecules, it gets bounced around *everywhere* in all directions.\n\nSo, when you look up at the sky, you\u2019re seeing all that scattered blue light bouncing around in every direction. That\u2019s why the whole sky looks blue!\n\nAt sunset, the sun is lower, so the light has to travel through *more* atmosphere. By then, most of the blue light has been scattered away, and what\u2019s left is mostly the red and orange light\u2014which is why sunsets look red or orange. \ud83c\udf05\n<|im_start|><|im_start|><|im_start|><|im_start|><|im_start|>"
+    },
+    {
+      "kind": "tg",
+      "elapsed_s": 5.275773943052627,
+      "ttft_s": 0.4508020239882171,
+      "decode_tokens_s": 52.85004851374264,
+      "usage": {
+        "prompt_tokens": 24,
+        "total_tokens": 280,
+        "completion_tokens": 256,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "output": "The choice between **synchronous** and **asynchronous** disk I/O is a fundamental architectural decision in systems programming, particularly in high-performance servers, databases, and operating systems. The tradeoffs revolve around **latency, throughput, complexity, and resource utilization**.\n\nBelow is a detailed comparison of the tradeoffs:\n\n---\n\n### 1. Synchronous Disk I/O\n\n**Definition:** The calling thread blocks until the I/O operation completes. The thread cannot proceed until the data is read from or written to the disk.\n\n#### \u2705 Advantages\n- **Simplicity:** Easy to reason about. The code flow is linear and deterministic.\n- **Predictable Latency:** Each operation completes in a known time frame (though variable due to disk mechanics).\n- **Lower Complexity:** No need for callbacks, futures, or state machines.\n- **Easier Debugging:** Stack traces and error handling are straightforward.\n\n#### \u274c Disadvantages\n- **Thread Blocking:** The thread is idle while waiting for I/O, wasting CPU cycles.\n- **Poor Scalability:** To handle many concurrent requests, you need many threads (or processes), which consumes memory and context-switching overhead.\n- **Low Throughput:** The system"
+    },
+    {
+      "kind": "tg",
+      "elapsed_s": 5.956987707992084,
+      "ttft_s": 0.4522709660232067,
+      "decode_tokens_s": 46.32390946764572,
+      "usage": {
+        "prompt_tokens": 25,
+        "total_tokens": 281,
+        "completion_tokens": 256,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "output": "Dr. Elara Vance had spent the last three years staring at satellite imagery, her eyes burning from the blue light of the monitors. She was a cartographer for the Global Oceanic Survey, tasked with mapping the shifting coastlines of the Pacific. Her job was tedious, repetitive, and often felt like shouting into a void.\n\nBut today, the void shouted back.\n\nIt started as a glitch. A pixelated smudge in the data stream from the new high-resolution LIDAR drones. Elara almost dismissed it as sensor noise, a common artifact in the turbulent waters near the Mariana Trench. But when she ran the algorithm again, the smudge didn\u2019t disappear. It solidified. It had edges. It had texture.\n\nShe zoomed in, her breath catching in her throat. The coordinates were impossible. According to every existing chart, that patch of ocean was empty. Yet, there it was: a landmass, roughly the size of Manhattan, rising from the depths like a ghost.\n\nElara\u2019s hands trembled as she cross-referenced the data with historical records. Nothing. No mention in ancient Polynesian legends, no record in colonial logs, no trace in modern sonar sweeps. It was as if the island had"
+    },
+    {
+      "kind": "tg",
+      "elapsed_s": 5.09778912703041,
+      "ttft_s": 0.4440913569414988,
+      "decode_tokens_s": 54.7951355240519,
+      "usage": {
+        "prompt_tokens": 26,
+        "total_tokens": 282,
+        "completion_tokens": 256,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "output": "A hash table is a data structure that maps keys to values using a hash function. Ideally, the hash function produces a unique index for every key, allowing for $O(1)$ average-time complexity for insertions, deletions, and lookups.\n\nHowever, **collisions** occur when two different keys hash to the same index. Since the hash function maps a large space of keys to a smaller space of indices, collisions are inevitable.\n\nHere are two common strategies for handling collisions:\n\n---\n\n### 1. Separate Chaining\n\n**Concept:**  \nEach bucket (index) in the hash table contains a pointer to a linked list (or another dynamic data structure) of entries that hash to that bucket.\n\n**How it works:**\n- When a collision occurs, the new key-value pair is simply appended to the linked list at that bucket.\n- To retrieve a value, the hash table computes the hash, goes to the bucket, and then traverses the linked list to find the matching key.\n\n**Pros:**\n- Simple to implement.\n- The table can grow beyond its initial capacity without rehashing (though performance degrades as chains get longer).\n- Easy to handle deletions.\n\n**Cons:**\n- Performance"
+    },
+    {
+      "kind": "tg",
+      "elapsed_s": 5.3162395029794425,
+      "ttft_s": 0.44548108999151736,
+      "decode_tokens_s": 52.35324324853394,
+      "usage": {
+        "prompt_tokens": 22,
+        "total_tokens": 278,
+        "completion_tokens": 256,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "output": "Designing a reliable background job queue is a critical task for ensuring system stability, scalability, and data integrity. A poorly designed queue can lead to data loss, duplicate processing, or system crashes.\n\nHere is a comprehensive guide to designing a reliable background job queue, covering architecture, reliability mechanisms, and operational best practices.\n\n---\n\n### 1. Core Architectural Principles\n\nA reliable queue must handle **at-least-once** or **exactly-once** delivery semantics, depending on your requirements. Most systems aim for **at-least-once** delivery with idempotent consumers.\n\n#### Key Components:\n1. **Producer**: Submits jobs to the queue.\n2. **Broker/Queue**: Stores jobs durably.\n3. **Consumer/Worker**: Processes jobs.\n4. **Dead Letter Queue (DLQ)**: Handles failed jobs.\n5. **Retry Mechanism**: Re-attempts failed jobs.\n6. **Monitoring & Alerting**: Tracks queue health.\n\n---\n\n### 2. Reliability Mechanisms\n\n#### A. Durability & Persistence\n- **Use a durable broker**: Choose a message broker that persists data to disk (e.g., RabbitMQ, Kafka, Redis with AOF,"
+    },
+    {
+      "kind": "tg",
+      "elapsed_s": 4.7209945659851655,
+      "ttft_s": 0.4462132379412651,
+      "decode_tokens_s": 59.65217409534387,
+      "usage": {
+        "prompt_tokens": 23,
+        "total_tokens": 279,
+        "completion_tokens": 256,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "output": "For a real-time multiplayer game, the choice between TCP and UDP is not a simple \"one is better than the other\" decision. Instead, it is a **hybrid approach** that leverages the strengths of both protocols for different types of data.\n\nHere\u2019s a detailed comparison and the recommended architecture:\n\n### 1. Core Characteristics\n\n| Feature | TCP (Transmission Control Protocol) | UDP (User Datagram Protocol) |\n| :--- | :--- | :--- |\n| **Reliability** | Guaranteed delivery, in-order, error-checked. | No guarantee of delivery, no ordering, no error checking. |\n| **Connection** | Connection-oriented (3-way handshake). | Connectionless (fire-and-forget). |\n| **Overhead** | High (headers, acknowledgments, retransmissions). | Low (minimal header, no acks). |\n| **Latency** | Higher (due to retransmissions and flow control). | Lower (no waiting for acks). |\n| **Congestion Control** | Built-in (slows down if network is congested). | None (can flood the network). |\n| **Use Case** | Critical data that must not be lost. | Time-sensitive data"
+    }
+  ]
+}

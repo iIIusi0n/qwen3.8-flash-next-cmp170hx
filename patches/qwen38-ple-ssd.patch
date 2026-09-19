@@ -1,0 +1,1345 @@
+diff --git a/tests/models/qwen4_exp/test_config.py b/tests/models/qwen4_exp/test_config.py
+index 9d30365..33b2f27 100644
+--- a/tests/models/qwen4_exp/test_config.py
++++ b/tests/models/qwen4_exp/test_config.py
+@@ -140,6 +140,34 @@ def test_qwen4_exp_mtp_override_sets_draft_config(
+     assert draft_config.n_predict == 1
+ 
+ 
++def test_qwen4_exp_mtp_preserves_autoround_projection_format(monkeypatch):
++    from vllm.model_executor.layers.linear import LinearBase
++    from vllm.model_executor.layers.quantization.inc import INCConfig
++    from vllm.models.qwen4_exp.nvidia import mtp
++
++    quant = INCConfig(
++        weight_bits=2,
++        group_size=64,
++        block_name_to_quantize=["model.layers"],
++        extra_config={
++            f"mtp.layers.0.self_attn.{name}_proj": {"bits": 8, "group_size": 128}
++            for name in ("q", "k", "v")
++        },
++    )
++    config = SimpleNamespace(
++        speculative_config=SimpleNamespace(draft_model_config=object()),
++    )
++    monkeypatch.setattr(mtp, "get_draft_quant_config", lambda _: quant)
++    monkeypatch.setattr(
++        mtp, "replace", lambda *args, **kwargs: SimpleNamespace(**kwargs)
++    )
++    draft = mtp._make_draft_vllm_config(config, 48)
++    layer = object.__new__(LinearBase)
++    assert draft.quant_config.get_layer_config(
++        layer, "mtp.layers.48.self_attn.qkv_proj"
++    ) == (8, 128, True)
++
++
+ @pytest.mark.parametrize("ple_layer_ids", [[1], []])
+ def test_qwen4_exp_rejects_pipeline_parallel_only_with_ple(ple_layer_ids) -> None:
+     """PLE needs raw input_ids, which non-first pipeline ranks never see. The
+diff --git a/tests/models/qwen4_exp/test_ple.py b/tests/models/qwen4_exp/test_ple.py
+index e7d0e72..bbab9a0 100644
+--- a/tests/models/qwen4_exp/test_ple.py
++++ b/tests/models/qwen4_exp/test_ple.py
+@@ -1,6 +1,9 @@
+ # SPDX-License-Identifier: Apache-2.0
+ # SPDX-FileCopyrightText: Copyright contributors to the vLLM project
+ 
++import json
++import os
++import threading
+ from dataclasses import dataclass
+ from functools import partial
+ from itertools import accumulate
+@@ -33,6 +36,7 @@ from vllm.models.qwen4_exp.nvidia.ngram_embedding import (
+     Qwen4ExpPLEUnquantizedEmbeddingMethod,
+ )
+ from vllm.models.qwen4_exp.nvidia.ple_layer import Qwen4ExpPLELayer
++from vllm.models.qwen4_exp.nvidia.ple_ssd import PLESSDTable, Qwen4ExpPLESSDEmbedding
+ from vllm.v1.attention.backends.short_conv_attn import (
+     PleShortConvAttentionMetadata,
+ )
+@@ -131,6 +135,313 @@ def test_ple_shard_overlap_and_copy() -> None:
+     torch.testing.assert_close(destination[3], torch.tensor([-1.0, -1.0]))
+ 
+ 
++def _ssd_checkpoint(tmp_path, dtype=torch.bfloat16):
++    from safetensors.torch import save_file
++
++    prefix = "model.language_model.layers.1.ple.ple_embedding.ngram_embedding"
++    table = torch.arange(128 * 160, dtype=torch.float32).reshape(128, 160).to(dtype)
++    names = [f"{prefix}.shard_{i}.weight" for i in range(2)]
++    save_file(
++        {names[0]: table[:64], names[1]: table[64:]}, tmp_path / "ple.safetensors"
++    )
++    (tmp_path / "model.safetensors.index.json").write_text(
++        json.dumps({"weight_map": dict.fromkeys(names, "ple.safetensors")})
++    )
++    return prefix, table
++
++
++def _ssd_native_library():
++    library = os.environ.get("VLLM_PLE_SSD_NATIVE_LIBRARY")
++    if not library:
++        pytest.skip("Set VLLM_PLE_SSD_NATIVE_LIBRARY to the built AIO helper")
++    return library
++
++
++@pytest.mark.parametrize("native", [False, True])
++def test_ssd_rows_preserve_shard_boundaries_duplicates_and_cache(tmp_path, native):
++    import numpy as np
++
++    prefix, weights = _ssd_checkpoint(tmp_path)
++    table = PLESSDTable(
++        str(tmp_path),
++        prefix,
++        128,
++        160,
++        workers=2,
++        cache_mb=1,
++        native_library=_ssd_native_library() if native else None,
++        io_depth=2,
++    )
++    try:
++        ids = np.array([[127, 0, 63, 64, 63, 12]], dtype=np.int64)
++        output = np.empty((ids.size, 320), dtype=np.uint8)
++        table.read(ids, output)
++        actual = torch.from_numpy(output).view(torch.bfloat16)
++        torch.testing.assert_close(
++            actual, weights[torch.from_numpy(ids.flatten())], rtol=0, atol=0
++        )
++        reads = table.reads
++        table.read(ids[:, ::-1].copy(), output)
++        torch.testing.assert_close(
++            actual,
++            weights[torch.from_numpy(ids.flatten()[::-1].copy())],
++            rtol=0,
++            atol=0,
++        )
++        assert table.reads == reads
++        with pytest.raises(IndexError):
++            table.read(np.array([-1]), np.empty((1, 320), dtype=np.uint8))
++    finally:
++        table.close()
++
++
++def test_ssd_native_drains_failed_reads_before_buffer_reuse(tmp_path):
++    import numpy as np
++
++    prefix, weights = _ssd_checkpoint(tmp_path)
++    table = PLESSDTable(
++        str(tmp_path),
++        prefix,
++        128,
++        160,
++        cache_mb=0,
++        native_library=_ssd_native_library(),
++        io_depth=2,
++    )
++    path = tmp_path / "ple.safetensors"
++    original = path.read_bytes()
++    ids = np.array([0, 64, 127], dtype=np.int64)
++    output = np.empty((len(ids), 320), dtype=np.uint8)
++    try:
++        path.write_bytes(b"")
++        with pytest.raises(OSError, match="asynchronous SSD read"):
++            table.read(ids, output)
++        path.write_bytes(original)
++        table.read(ids, output)
++        torch.testing.assert_close(
++            torch.from_numpy(output).view(torch.bfloat16),
++            weights[ids],
++            rtol=0,
++            atol=0,
++        )
++        # A valid request may already be submitted before the next FD fails.
++        table._native._parts[1, 2] = -1
++        with pytest.raises(OSError):
++            table.read(ids, output)
++        with pytest.raises(OSError):
++            table.read(ids[:1], output[:1])
++    finally:
++        table.close()
++
++
++def test_ssd_prompt_read_ahead_preserves_context_and_cancels(tmp_path, monkeypatch):
++    import numpy as np
++
++    from vllm.models.qwen4_exp.nvidia.ple_ssd import PLEPromptPrefetcher
++
++    prefix, weights = _ssd_checkpoint(tmp_path)
++    table = PLESSDTable(str(tmp_path), prefix, 128, 160, cache_mb=4)
++    ngram = Qwen4ExpNGramEmbedding.__new__(Qwen4ExpNGramEmbedding)
++    nn.Module.__init__(ngram)
++    ngram.ngram_size = 3
++    ngram.heads_per_ngram = 1
++    ngram.ngram_heads = 2
++    ngram.eos_token_id = 17
++    ngram.ngram_embedding = SimpleNamespace(_table=table)
++    for name, values in (
++        ("layer_multipliers", [101, 303, 505]),
++        ("ngram_heads_vocab_sizes", [61, 61]),
++        ("ngram_heads_offsets", [0, 64]),
++    ):
++        ngram.register_buffer(name, torch.tensor(values))
++    prefetcher = PLEPromptPrefetcher(ngram, 4096)
++    tokens = (torch.arange(2305) % 251).tolist()
++    try:
++        prefetcher.submit("first", tokens, 5)
++        prefetcher._future.result(timeout=10)
++        ids = ngram.compute_ngram_ids(
++            torch.tensor(tokens[5:]),
++            torch.tensor([0, len(tokens) - 5]),
++            torch.tensor([tokens[3:5]]),
++        ).numpy()
++        reads = table.reads
++        output = np.empty((ids.size, 320), dtype=np.uint8)
++        table.read(ids, output)
++        assert table.reads == reads
++        torch.testing.assert_close(
++            torch.from_numpy(output).view(torch.bfloat16),
++            weights[ids.reshape(-1)],
++            rtol=0,
++            atol=0,
++        )
++        entered, release = threading.Event(), threading.Event()
++        read = table._read
++        calls = []
++
++        def blocked(ids, output):
++            calls.append(ids.size)
++            entered.set()
++            assert release.wait(10)
++            read(ids, output)
++
++        monkeypatch.setattr(table, "_read", blocked)
++        prefetcher.submit("cancelled", tokens, 0)
++        assert entered.wait(5)
++        prefetcher.cancel("cancelled")
++        release.set()
++        prefetcher._future.result(timeout=10)
++        assert calls == [256 * 2]
++    finally:
++        if "release" in locals():
++            release.set()
++        prefetcher.close()
++        table.close()
++
++
++def test_ssd_rejects_truncated_checkpoint(tmp_path):
++    prefix, _ = _ssd_checkpoint(tmp_path)
++    with open(tmp_path / "ple.safetensors", "r+b") as f:
++        f.truncate(3000)
++    with pytest.raises(ValueError, match="Incomplete"):
++        PLESSDTable(str(tmp_path), prefix, 128, 160)
++
++
++def test_ssd_loader_never_maps_the_full_ple_table(tmp_path, monkeypatch):
++    from vllm.config import LoadConfig
++    from vllm.model_executor.model_loader.default_loader import DefaultModelLoader
++
++    _ssd_checkpoint(tmp_path)
++
++    def no_mmap(*args, **kwargs):
++        raise AssertionError("PLE checkpoint must not be memory-mapped")
++
++    monkeypatch.setattr(
++        "vllm.model_executor.model_loader.weight_utils.safe_open", no_mmap
++    )
++    monkeypatch.setattr(
++        "vllm.model_executor.model_loader.default_loader.get_current_vllm_config_or_none",
++        lambda: SimpleNamespace(additional_config={"ple_ssd_offload": True}),
++    )
++    loader = DefaultModelLoader(LoadConfig(load_format="safetensors"))
++    tensors = list(
++        loader._get_weights_iterator(DefaultModelLoader.Source(str(tmp_path), None))
++    )
++    assert len(tensors) == 2
++    assert all(t.is_meta and t.dtype == torch.bfloat16 for _, t in tensors)
++
++
++@pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA required")
++@pytest.mark.parametrize("graph_mode", ["PIECEWISE", "FULL"])
++@pytest.mark.parametrize("native", [False, True])
++def test_ssd_prefetch_overlaps_cuda_and_reuses_buffers(
++    tmp_path, monkeypatch, graph_mode, native
++):
++    import vllm.models.qwen4_exp.nvidia.ple_ssd as ssd_module
++
++    prefix, weights = _ssd_checkpoint(tmp_path)
++    _mock_etp_group(monkeypatch)
++    config = SimpleNamespace(
++        parallel_config=SimpleNamespace(tensor_parallel_size=1, data_parallel_size=1),
++        model_config=SimpleNamespace(model=str(tmp_path)),
++        additional_config={
++            "ple_ssd_workers": 2,
++            "ple_ssd_cache_mb": 1,
++            "ple_ssd_native_library": _ssd_native_library() if native else None,
++            "ple_ssd_io_depth": 2,
++        },
++    )
++    monkeypatch.setattr(ssd_module, "get_current_vllm_config", lambda: config)
++    with torch.device("cuda"):
++        embedding = Qwen4ExpPLESSDEmbedding(
++            128,
++            160,
++            params_dtype=torch.bfloat16,
++            padding_size=64,
++            prefix=prefix,
++            embedding_method=Qwen4ExpPLEUnquantizedEmbeddingMethod(),
++            num_ngram_heads=2,
++            max_total_tokens=8,
++        )
++    embedding.weight_loader(embedding.weight, weights[:64], checkpoint_start=0)
++    embedding.weight_loader(embedding.weight, weights[64:], checkpoint_start=64)
++    assert embedding.weight.is_meta
++    gate = threading.Event()
++    entered = threading.Event()
++    reader = embedding._table._native or embedding._table
++    read_name = "read" if native else "_read_rows"
++    read_rows = getattr(reader, read_name)
++
++    def delayed(ids):
++        entered.set()
++        assert gate.wait(10), "test did not release disk reads"
++        return read_rows(ids)
++
++    monkeypatch.setattr(reader, read_name, delayed)
++    try:
++        for tokens in (3, 1, 8, 2):
++            ids = (torch.arange(tokens * 2).reshape(tokens, 2) * 17 % 128).cuda()
++            hidden = torch.empty((tokens, 320), device="cuda", dtype=torch.bfloat16)
++            embedding.start_prefetch(hidden, ids)
++            assert entered.wait(5)
++            # CUDA work completes while SSD reads are deliberately blocked.
++            probe = torch.ones(64, device="cuda") + 2
++            assert probe.sum().item() == 192
++            gate.set()
++            output = embedding(hidden)
++            expected = weights[ids.cpu()].flatten(-2).cuda()
++            torch.testing.assert_close(output, expected, rtol=0, atol=0)
++            gate.clear()
++        from vllm.compilation.breakable_cudagraph import (
++            BreakableCUDAGraphCapture,
++            is_breakable_cudagraph_enabled,
++        )
++
++        if is_breakable_cudagraph_enabled():
++            from unittest.mock import MagicMock
++
++            from vllm.config import CUDAGraphMode
++            from vllm.forward_context import set_forward_context
++
++            graph_config = MagicMock()
++            graph_config.parallel_config.data_parallel_size = 1
++            graph_config.parallel_config.use_sequence_parallel_moe = False
++            graph_config.parallel_config.is_moe_model = False
++            gate.set()
++            computed_ids = torch.full_like(ids, -1)
++            stream = torch.cuda.Stream()
++            stream.wait_stream(torch.cuda.current_stream())
++            with torch.cuda.stream(stream):
++                with (
++                    set_forward_context(
++                        None,
++                        graph_config,
++                        cudagraph_runtime_mode=CUDAGraphMode[graph_mode],
++                    ),
++                    BreakableCUDAGraphCapture() as graph,
++                ):
++                    # These kernels only execute on replay; capture must not
++                    # read the invalid initial contents of computed_ids.
++                    torch.add(ids, 3, out=computed_ids)
++                    computed_ids.remainder_(128)
++                    embedding.start_prefetch(hidden, computed_ids)
++                    # Model graph segments may reuse the source's pool slot
++                    # while its asynchronous D2H transfer is still pending.
++                    computed_ids.fill_(-1)
++                    work = hidden + 1
++                    output = embedding(work) + 1
++                stream.synchronize()
++                for _ in range(3):
++                    ids.add_(1).remainder_(128)
++                    with torch.cuda.stream(embedding._stream):
++                        torch.cuda._sleep(1_000_000)
++                    graph.replay()
++                    expected = weights[(ids.cpu() + 3) % 128].flatten(-2).cuda() + 1
++                    torch.testing.assert_close(output, expected, rtol=0, atol=0)
++    finally:
++        gate.set()
++        embedding.close()
++
++
+ def test_ple_shard_copy_is_a_noop_without_overlap() -> None:
+     destination = torch.ones(4, 2)
+     copied = copy_ple_embedding_shard_(
+diff --git a/tests/quantization/test_auto_round.py b/tests/quantization/test_auto_round.py
+index 2bc463b..59e257a 100644
+--- a/tests/quantization/test_auto_round.py
++++ b/tests/quantization/test_auto_round.py
+@@ -416,6 +416,30 @@ def test_inc_get_quant_method_unquantized_routed_experts_with_model_prefix(
+     assert method.moe_config is None
+ 
+ 
++@pytest.mark.parametrize("bits", [3, 4])
++def test_inc_routed_experts_respects_per_expert_overrides(bits):
++    """Mixed-bit checkpoints describe individual experts under RoutedExperts."""
++    config = make_config(
++        weight_bits=2,
++        group_size=64,
++        block_name_to_quantize=["model.layers"],
++        extra_config={
++            f"mtp.layers.48.mlp.experts.{i}.{projection}": {
++                "bits": bits,
++                "group_size": 128,
++            }
++            for i in range(2)
++            for projection in ("gate_proj", "up_proj", "down_proj")
++        },
++    )
++    layer = object.__new__(RoutedExperts)
++    assert config.get_layer_config(layer, "mtp.layers.48.mlp.experts") == (
++        bits,
++        128,
++        True,
++    )
++
++
+ def test_inc_get_quant_method_unknown_layer_with_model_prefix_returns_none() -> None:
+     """``model.``-prefixed extra_config entries return None for unhandled
+     layer types (non-Linear, non-MoE)."""
+diff --git a/tests/v1/cudagraph/test_breakable_cudagraph.py b/tests/v1/cudagraph/test_breakable_cudagraph.py
+index b0b49a9..6670f32 100644
+--- a/tests/v1/cudagraph/test_breakable_cudagraph.py
++++ b/tests/v1/cudagraph/test_breakable_cudagraph.py
+@@ -287,17 +287,25 @@ def test_capture_replay_matches_eager_simple(cuda_capture_stream):
+     assert log == ["eager", "eager", "eager"]
+ 
+ 
+-def test_decorator_breaks_when_invoked_inside_capture(cuda_capture_stream):
++@pytest.mark.parametrize("full_host_break", [False, True])
++def test_decorator_breaks_when_invoked_inside_capture(
++    cuda_capture_stream, full_host_break
++):
+     """Verify @eager_break_during_capture correctly routes through
+     add_eager when inside a capture context, and runs straight through
+     when there's no active capture."""
++    from functools import partial
++
+     from vllm.compilation.breakable_cudagraph import (
+         BreakableCUDAGraphCapture,
+         eager_break_during_capture,
+     )
++    from vllm.config import CUDAGraphMode
++    from vllm.forward_context import set_forward_context
+ 
+-    @eager_break_during_capture
++    @partial(eager_break_during_capture, always=full_host_break)
+     def attention_like(t: torch.Tensor) -> None:
++        assert not torch.cuda.is_current_stream_capturing()
+         # In-place double; stands in for "real" attention work.
+         t.mul_(2.0)
+ 
+@@ -313,7 +321,16 @@ def test_decorator_breaks_when_invoked_inside_capture(cuda_capture_stream):
+     # segment actually mutates state during capture.
+     x.fill_(0.0)
+     cap = BreakableCUDAGraphCapture()
+-    with cap:
++    with (
++        set_forward_context(
++            None,
++            _mock_vllm_config(),
++            cudagraph_runtime_mode=(
++                CUDAGraphMode.FULL if full_host_break else CUDAGraphMode.PIECEWISE
++            ),
++        ),
++        cap,
++    ):
+         x.add_(5.0)  # recorded
+         attention_like(x)  # eager: x *= 2 (on x == 0, no-op)
+         x.add_(1.0)  # recorded
+diff --git a/vllm/compilation/breakable_cudagraph.py b/vllm/compilation/breakable_cudagraph.py
+index ca6aa17..0481fea 100644
+--- a/vllm/compilation/breakable_cudagraph.py
++++ b/vllm/compilation/breakable_cudagraph.py
+@@ -63,7 +63,7 @@ def _weak_ref_capture_arg(arg: Any) -> Any:
+     return weak_ref_tensor(arg)
+ 
+ 
+-def eager_break_during_capture(fn: F) -> F:
++def eager_break_during_capture(fn: F, *, always: bool = False) -> F:
+     """Decorator that turns a custom-op Python kernel into a "break point"
+     for the breakable cudagraph capture.
+ 
+@@ -74,6 +74,9 @@ def eager_break_during_capture(fn: F) -> F:
+     segment, runs the function eagerly on the capture stream, records the
+     callable for replay, and starts a fresh segment.
+ 
++    ``always=True`` also breaks FULL capture for operations that require
++    host execution, such as asynchronous disk offloading.
++
+     **In-place output buffer required.** Decorated ops must write into a
+     caller-provided output tensor; a fresh tensor returned by ``fn`` would
+     change address each replay and break downstream graph segments.
+@@ -106,7 +109,7 @@ def eager_break_during_capture(fn: F) -> F:
+             return fn(*args, **kwargs)
+         if is_forward_context_available():
+             mode = get_forward_context().cudagraph_runtime_mode
+-            if mode == CUDAGraphMode.FULL:
++            if mode == CUDAGraphMode.FULL and not always:
+                 return fn(*args, **kwargs)
+ 
+         # Weak-ref args: strong refs in the replay lambda pin cudagraph-pool
+diff --git a/vllm/model_executor/layers/quantization/inc/config_parser.py b/vllm/model_executor/layers/quantization/inc/config_parser.py
+index ce3e99b..8eaa84b 100644
+--- a/vllm/model_executor/layers/quantization/inc/config_parser.py
++++ b/vllm/model_executor/layers/quantization/inc/config_parser.py
+@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
+ 
+ import regex as re
+ 
++from vllm.model_executor.layers.fused_moe import RoutedExperts
+ from vllm.model_executor.layers.vocab_parallel_embedding import ParallelLMHead
+ 
+ if TYPE_CHECKING:
+@@ -175,7 +176,10 @@ class INCConfigParser:
+                 for name in self._config.block_name_to_quantize
+             )
+ 
+-        if self._config.extra_config and "fusedmoe" in layer.__class__.__name__.lower():
++        if self._config.extra_config and (
++            isinstance(layer, RoutedExperts)
++            or "fusedmoe" in layer.__class__.__name__.lower()
++        ):
+             moe_configs = [
+                 get_config(name, quantized)
+                 for name in self._config.extra_config
+diff --git a/vllm/model_executor/model_loader/default_loader.py b/vllm/model_executor/model_loader/default_loader.py
+index 039a577..c749cde 100644
+--- a/vllm/model_executor/model_loader/default_loader.py
++++ b/vllm/model_executor/model_loader/default_loader.py
+@@ -11,7 +11,7 @@ import torch
+ from torch import nn
+ from transformers.utils import SAFE_WEIGHTS_INDEX_NAME
+ 
+-from vllm.config import ModelConfig
++from vllm.config import ModelConfig, get_current_vllm_config_or_none
+ from vllm.config.load import LoadConfig
+ from vllm.logger import init_logger
+ from vllm.model_executor.layers.quantization.torchao import torchao_version_at_least
+@@ -264,7 +264,19 @@ class DefaultModelLoader(BaseModelLoader):
+                 self.load_config.use_tqdm_on_load,
+             )
+         elif use_safetensors:
+-            if self.load_config.load_format == "fastsafetensors":
++            config = get_current_vllm_config_or_none()
++            if config is not None and config.additional_config.get("ple_ssd_offload"):
++                from vllm.models.qwen4_exp.nvidia.ple_ssd import (
++                    ple_ssd_weights_iterator,
++                )
++
++                weights_iterator = ple_ssd_weights_iterator(
++                    hf_weights_files,
++                    self.load_config.use_tqdm_on_load,
++                    self.load_config.safetensors_load_strategy,
++                    self.local_expert_ids,
++                )
++            elif self.load_config.load_format == "fastsafetensors":
+                 weights_iterator = fastsafetensors_weights_iterator(
+                     hf_weights_files,
+                     self.load_config.use_tqdm_on_load,
+diff --git a/vllm/models/qwen4_exp/nvidia/model_state.py b/vllm/models/qwen4_exp/nvidia/model_state.py
+index 2461685..f7823f6 100644
+--- a/vllm/models/qwen4_exp/nvidia/model_state.py
++++ b/vllm/models/qwen4_exp/nvidia/model_state.py
+@@ -8,6 +8,7 @@ import torch
+ import torch.nn as nn
+ 
+ from vllm.config import VllmConfig
++from vllm.v1.core.sched.output import NewRequestData
+ from vllm.v1.worker.gpu.input_batch import InputBatch
+ from vllm.v1.worker.gpu.mm.encoder_cache import EncoderCache
+ from vllm.v1.worker.gpu.model_states.mamba_hybrid import MambaHybridModelState
+@@ -25,6 +26,21 @@ class Qwen4ExpModelState(MambaHybridModelState):
+         device: torch.device,
+     ) -> None:
+         super().__init__(vllm_config, model, encoder_cache, device)
++        self.ple_prompt_prefetchers = []
++        prefetch_tokens = int(
++            vllm_config.additional_config.get("ple_ssd_prefetch_tokens", 0)
++        )
++        if prefetch_tokens:
++            from .ngram_embedding import Qwen4ExpNGramEmbedding
++            from .ple_ssd import PLEPromptPrefetcher, Qwen4ExpPLESSDEmbedding
++
++            for module in model.modules():
++                if isinstance(module, Qwen4ExpNGramEmbedding) and isinstance(
++                    module.ngram_embedding, Qwen4ExpPLESSDEmbedding
++                ):
++                    prefetcher = PLEPromptPrefetcher(module, prefetch_tokens)
++                    module.ngram_embedding.prompt_prefetcher = prefetcher
++                    self.ple_prompt_prefetchers.append(prefetcher)
+         config = self.model_config.hf_text_config
+         self.uses_ngram_embedding = bool(config.ple_layer_ids)
+         if not self.uses_ngram_embedding:
+@@ -64,6 +80,21 @@ class Qwen4ExpModelState(MambaHybridModelState):
+             device=self.device,
+         )
+ 
++    def add_request(self, req_index: int, new_req_data: NewRequestData) -> None:
++        super().add_request(req_index, new_req_data)
++        if new_req_data.prefill_token_ids is not None:
++            for prefetcher in self.ple_prompt_prefetchers:
++                prefetcher.submit(
++                    new_req_data.req_id,
++                    new_req_data.prefill_token_ids,
++                    new_req_data.num_computed_tokens,
++                )
++
++    def remove_request(self, req_id: str) -> None:
++        for prefetcher in self.ple_prompt_prefetchers:
++            prefetcher.cancel(req_id)
++        super().remove_request(req_id)
++
+     def _prepare_ngram_context(
+         self,
+         input_batch: InputBatch,
+diff --git a/vllm/models/qwen4_exp/nvidia/mtp.py b/vllm/models/qwen4_exp/nvidia/mtp.py
+index af3bcd4..ffa8c5c 100644
+--- a/vllm/models/qwen4_exp/nvidia/mtp.py
++++ b/vllm/models/qwen4_exp/nvidia/mtp.py
+@@ -152,6 +152,11 @@ def _make_draft_vllm_config(
+                 "quantized_layers",
+                 _remap_quantized_layers(quantized_layers, mtp_start_layer_idx),
+             )
++        extra_config = getattr(draft_quant_config, "extra_config", None)
++        if extra_config:
++            draft_quant_config.extra_config = _remap_quantized_layers(
++                extra_config, mtp_start_layer_idx
++            )
+ 
+     draft_vllm_config = replace(
+         vllm_config,
+diff --git a/vllm/models/qwen4_exp/nvidia/ngram_embedding.py b/vllm/models/qwen4_exp/nvidia/ngram_embedding.py
+index c26fd87..30ad37a 100644
+--- a/vllm/models/qwen4_exp/nvidia/ngram_embedding.py
++++ b/vllm/models/qwen4_exp/nvidia/ngram_embedding.py
+@@ -20,6 +20,7 @@ from vllm.model_executor.layers.quantization.base_config import (
+     QuantizeMethodBase,
+ )
+ from vllm.model_executor.layers.quantization.fp8 import Fp8Config
++from vllm.model_executor.layers.quantization.inc.inc import INCConfig
+ from vllm.model_executor.layers.quantization.modelopt import (
+     ModelOptMixedPrecisionConfig,
+     ModelOptQuantConfigBase,
+@@ -173,7 +174,8 @@ class Qwen4ExpPLEEmbeddingMethod(QuantizeMethodBase):
+         """Select the concrete PLE embedding format for a layer."""
+         if embedding_dtype == "float8_e4m3fn":
+             return Qwen4ExpPLEFp8EmbeddingMethod()
+-        if quant_config is None:
++        # INC quantizes linear layers, leaving the PLE embedding unquantized.
++        if quant_config is None or isinstance(quant_config, INCConfig):
+             return Qwen4ExpPLEUnquantizedEmbeddingMethod()
+         if isinstance(quant_config, ModelOptMixedPrecisionConfig):
+             if quant_config._resolve_quant_algo(prefix) == "FP8":
+@@ -705,6 +707,10 @@ class Qwen4ExpNGramEmbedding(nn.Module):
+             if engram_config is not None and engram_config.cpu_offload
+             else Qwen4ExpPLEDeviceEmbedding
+         )
++        if get_current_vllm_config().additional_config.get("ple_ssd_offload"):
++            from .ple_ssd import Qwen4ExpPLESSDEmbedding
++
++            embedding_cls = Qwen4ExpPLESSDEmbedding
+         self.ngram_embedding = embedding_cls(
+             padded_vocab_size,
+             self.head_dim,
+diff --git a/vllm/v1/worker/gpu/cudagraph_utils.py b/vllm/v1/worker/gpu/cudagraph_utils.py
+index 4690c7e..c34eb14 100644
+--- a/vllm/v1/worker/gpu/cudagraph_utils.py
++++ b/vllm/v1/worker/gpu/cudagraph_utils.py
+@@ -14,6 +14,7 @@ import torch.nn as nn
+ from tqdm import tqdm
+ 
+ from vllm.compilation.breakable_cudagraph import (
++    BreakableCUDAGraphCapture,
+     BreakableCUDAGraphWrapper,
+     is_breakable_cudagraph_enabled,
+ )
+@@ -169,7 +170,9 @@ class CudaGraphManager:
+         # dispatch() is a plain dict lookup instead of a per-call bisect.
+         self._lora_dispatch_map, self._max_lora_case = self._build_lora_dispatch_map()
+ 
+-        self.graphs: dict[BatchExecutionDescriptor, torch.cuda.CUDAGraph] = {}
++        self.graphs: dict[
++            BatchExecutionDescriptor, torch.cuda.CUDAGraph | BreakableCUDAGraphCapture
++        ] = {}
+         self.pool = current_platform.get_global_graph_pool() if cudagraph_mode else None
+ 
+         self._graphs_captured = False
+@@ -460,7 +463,14 @@ class CudaGraphManager:
+                         assert desc not in self.graphs, (
+                             f"Graph already captured for {desc}"
+                         )
+-                        graph = torch.cuda.CUDAGraph()
++                        ssd_breaks = self.use_breakable_cg and bool(
++                            self.vllm_config.additional_config.get("ple_ssd_offload")
++                        )
++                        graph = (
++                            BreakableCUDAGraphCapture(self.pool)
++                            if ssd_breaks
++                            else torch.cuda.CUDAGraph()
++                        )
+                         # Sync offloader's copy stream before capture.
+                         # Ensure any pre-capture prefetches from offloader are complete.
+                         get_offloader().sync_prev_onload()
+@@ -471,10 +481,20 @@ class CudaGraphManager:
+                         if self._capture_mem_samples is not None:
+                             torch.accelerator.synchronize()
+                             free_before = torch.accelerator.get_memory_info()[0]
+-                        with torch.cuda.graph(
+-                            graph, self.pool, stream=self._capture_stream(desc)
++                        capture_context = (
++                            graph
++                            if isinstance(graph, BreakableCUDAGraphCapture)
++                            else torch.cuda.graph(
++                                graph, self.pool, stream=self._capture_stream(desc)
++                            )
++                        )
++                        with (
++                            torch.cuda.stream(self._capture_stream(desc)),
++                            capture_context,
+                         ):
+-                            forward_fn(CUDAGraphMode.NONE)
++                            forward_fn(
++                                CUDAGraphMode.FULL if ssd_breaks else CUDAGraphMode.NONE
++                            )
+                             # Join offloader's copy stream after forward to avoid
+                             # unjoined stream error. The last layer's start_prefetch
+                             # forks copy_stream, but wait_prefetch only happens in
+diff --git a/vllm/models/qwen4_exp/nvidia/ple_ssd.py b/vllm/models/qwen4_exp/nvidia/ple_ssd.py
+new file mode 100644
+index 0000000..e427207
+--- /dev/null
++++ b/vllm/models/qwen4_exp/nvidia/ple_ssd.py
+@@ -0,0 +1,502 @@
++# SPDX-License-Identifier: Apache-2.0
++# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
++"""Asynchronous PLE row reads from the original safetensors checkpoint."""
++
++import bisect
++import copy
++import ctypes
++import json
++import os
++import struct
++import threading
++from collections import OrderedDict
++from collections.abc import Iterable
++from concurrent.futures import Future, ThreadPoolExecutor
++from functools import partial
++from pathlib import Path
++from typing import ClassVar
++
++import numpy as np
++import torch
++
++from vllm.compilation.breakable_cudagraph import (
++    BreakableCUDAGraphCapture,
++    eager_break_during_capture,
++)
++from vllm.config import get_current_vllm_config
++from vllm.logger import init_logger
++
++from .ngram_embedding import Qwen4ExpNGramEmbedding, Qwen4ExpPLEEmbedding
++
++logger = init_logger(__name__)
++
++
++def ple_ssd_weights_iterator(files, use_tqdm, strategy, local_expert_ids=None):
++    """Avoid mmap's commit charge for checkpoint files containing only PLE."""
++    from vllm.model_executor.model_loader.weight_utils import (
++        safetensors_weights_iterator,
++    )
++
++    regular_files = []
++    for path in files:
++        with open(path, "rb") as f:
++            header_len = struct.unpack("<Q", f.read(8))[0]
++            if header_len > 100_000_000:
++                raise ValueError(f"Invalid safetensors header: {path}")
++            header = json.loads(f.read(header_len))
++        tensors = {k: v for k, v in header.items() if k != "__metadata__"}
++        if tensors and all(".ngram_embedding.shard_" in k for k in tensors):
++            for name, info in tensors.items():
++                if info["dtype"] != "BF16":
++                    raise ValueError("PLE SSD requires BF16 checkpoint tensors")
++                yield (
++                    name,
++                    torch.empty(info["shape"], dtype=torch.bfloat16, device="meta"),
++                )
++        else:
++            if any(".ngram_embedding.shard_" in k for k in tensors):
++                raise ValueError("PLE SSD requires PLE tensors in dedicated shards")
++            regular_files.append(path)
++    yield from safetensors_weights_iterator(
++        regular_files, use_tqdm, strategy, local_expert_ids
++    )
++
++
++class PLESSDNativeReader:
++    """Bounded Linux direct AIO; the native call releases the Python GIL."""
++
++    def __init__(self, table, library: str, depth: int) -> None:
++        if not 1 <= depth <= 4096 or not 1 <= table.row_bytes <= 4096:
++            raise ValueError("PLE AIO requires depth and row bytes in [1, 4096]")
++        self._lib = ctypes.CDLL(library, use_errno=True)
++        self._lib.rows_open.argtypes = [ctypes.c_uint]
++        self._lib.rows_open.restype = ctypes.c_void_p
++        self._lib.rows_close.argtypes = [ctypes.c_void_p]
++        self._lib.rows_close.restype = None
++        self._lib.rows_read.argtypes = [
++            ctypes.c_void_p,
++            ctypes.c_void_p,
++            ctypes.c_void_p,
++            ctypes.c_uint,
++            ctypes.c_uint,
++            ctypes.c_void_p,
++        ]
++        self._lib.rows_read.restype = ctypes.c_int
++        self._reader = self._lib.rows_open(depth)
++        self._fds: dict[int, int] = {}
++        if not self._reader:
++            raise OSError(ctypes.get_errno(), "PLE io_setup failed")
++        try:
++            for fd in table._fds.values():
++                self._fds[fd] = os.open(
++                    f"/proc/self/fd/{fd}", os.O_RDONLY | os.O_DIRECT
++                )
++            self._parts = np.asarray(table._parts, dtype=np.int64)
++            self._parts[:, 2] = [self._fds[fd] for fd in self._parts[:, 2]]
++            self.row_bytes = table.row_bytes
++        except BaseException:
++            self.close()
++            raise
++
++    def read(self, rows: list[int]) -> list[tuple[int, bytes]]:
++        ids = np.asarray(rows, dtype=np.int64)
++        parts = self._parts[np.searchsorted(self._parts[:, 0], ids, side="right") - 1]
++        fds = np.ascontiguousarray(parts[:, 2], dtype=np.int32)
++        offsets = np.ascontiguousarray(
++            parts[:, 3] + (ids - parts[:, 0]) * self.row_bytes, dtype=np.uint64
++        )
++        out = np.empty((len(ids), self.row_bytes), dtype=np.uint8)
++        status = self._lib.rows_read(
++            self._reader,
++            fds.ctypes.data,
++            offsets.ctypes.data,
++            len(ids),
++            self.row_bytes,
++            out.ctypes.data,
++        )
++        if status:
++            raise OSError(-status, "PLE asynchronous SSD read failed")
++        return [(row, out[i].tobytes()) for i, row in enumerate(rows)]
++
++    def close(self) -> None:
++        if self._reader:
++            self._lib.rows_close(self._reader)
++            self._reader = None
++        for fd in self._fds.values():
++            os.close(fd)
++        self._fds.clear()
++
++
++class PLESSDTable:
++    """Read immutable BF16 rows with bounded concurrent I/O and an LRU cache.
++
++    Native AIO or disk workers release the GIL while reading. Neither the
++    full table nor whole checkpoint shards are loaded into RAM.
++    """
++
++    def __init__(
++        self,
++        model_path: str,
++        prefix: str,
++        rows: int,
++        dim: int,
++        workers: int = 8,
++        cache_mb: int = 128,
++        native_library: str | None = None,
++        io_depth: int = 256,
++    ) -> None:
++        if workers < 1 or cache_mb < 0:
++            raise ValueError(
++                "PLE SSD workers must be positive and cache_mb nonnegative"
++            )
++        self.row_bytes = dim * 2
++        self.rows = rows
++        self.workers = workers
++        self.cache_limit = cache_mb * 1024 * 1024 // (self.row_bytes + 128)
++        self.cache: OrderedDict[int, bytes] = OrderedDict()
++        self.hits = self.reads = 0
++        self._condition = threading.Condition()
++        self._reading = False
++        self._waiting = 0
++        self._fds: dict[str, int] = {}
++        self._parts: list[tuple[int, int, int, int]] = []
++        root = Path(model_path)
++        with open(root / "model.safetensors.index.json") as f:
++            weight_map = json.load(f)["weight_map"]
++        # HF and vLLM use different wrappers around the same decoder layers.
++        suffix = prefix[prefix.index("layers.") :] + ".shard_"
++        keys = [k for k in weight_map if suffix in k and k.endswith(".weight")]
++        keys.sort(key=lambda k: int(k.rsplit("shard_", 1)[1].split(".")[0]))
++        if not keys:
++            raise ValueError(f"No checkpoint PLE shards match {prefix}")
++        headers = {}
++        start = 0
++        try:
++            for i, key in enumerate(keys):
++                if int(key.rsplit("shard_", 1)[1].split(".")[0]) != i:
++                    raise ValueError("PLE checkpoint shard indices must be contiguous")
++                filename = weight_map[key]
++                if filename not in headers:
++                    path = root / filename
++                    with open(path, "rb") as f:
++                        header_len = struct.unpack("<Q", f.read(8))[0]
++                        if header_len > 100_000_000:
++                            raise ValueError(f"Invalid safetensors header: {path}")
++                        headers[filename] = (
++                            json.loads(f.read(header_len)),
++                            8 + header_len,
++                        )
++                    fd = os.open(path, os.O_RDONLY)
++                    self._fds[filename] = fd
++                    os.posix_fadvise(fd, 0, 0, os.POSIX_FADV_RANDOM)
++                header, data_start = headers[filename]
++                info = header[key]
++                shape = info["shape"]
++                if info["dtype"] != "BF16" or len(shape) != 2 or shape[1] != dim:
++                    raise ValueError(f"PLE SSD requires BF16 [rows, {dim}]: {key}")
++                begin, end = info["data_offsets"]
++                fd = self._fds[filename]
++                if end - begin != shape[0] * self.row_bytes:
++                    raise ValueError(f"Invalid PLE tensor byte range: {key}")
++                if data_start + end > os.fstat(fd).st_size:
++                    raise ValueError(f"Incomplete PLE checkpoint: {filename}")
++                self._parts.append((start, start + shape[0], fd, data_start + begin))
++                start += shape[0]
++            if start != rows:
++                raise ValueError(f"PLE table has {start} rows, expected {rows}")
++        except BaseException:
++            for fd in self._fds.values():
++                os.close(fd)
++            raise
++        self._starts = [p[0] for p in self._parts]
++        self._native = None
++        self._pool = None
++        try:
++            if native_library:
++                self._native = PLESSDNativeReader(self, native_library, io_depth)
++            else:
++                self._pool = ThreadPoolExecutor(
++                    workers, thread_name_prefix="ple-ssd-io"
++                )
++        except BaseException:
++            for fd in self._fds.values():
++                os.close(fd)
++            raise
++
++    def _read_rows(self, ids: list[int]) -> list[tuple[int, bytes]]:
++        result = []
++        for row in ids:
++            start, _, fd, offset = self._parts[
++                bisect.bisect_right(self._starts, row) - 1
++            ]
++            data = os.pread(fd, self.row_bytes, offset + (row - start) * self.row_bytes)
++            if len(data) != self.row_bytes:
++                raise OSError(f"Short PLE SSD read for row {row}")
++            result.append((row, data))
++        return result
++
++    def read(
++        self, ids: np.ndarray, output: np.ndarray, *, prefetch: bool = False
++    ) -> None:
++        """Serialize cache/I/O access, giving demanded rows priority over read-ahead."""
++        with self._condition:
++            if not prefetch:
++                self._waiting += 1
++            try:
++                while self._reading or (prefetch and self._waiting):
++                    self._condition.wait()
++                self._reading = True
++            finally:
++                if not prefetch:
++                    self._waiting -= 1
++        try:
++            self._read(ids, output)
++        finally:
++            with self._condition:
++                self._reading = False
++                self._condition.notify_all()
++
++    def _read(self, ids: np.ndarray, output: np.ndarray) -> None:
++        """Fill a byte buffer in request order, preserving duplicate rows."""
++        flat = ids.reshape(-1)
++        if output.shape != (flat.size, self.row_bytes) or output.dtype != np.uint8:
++            raise ValueError("PLE SSD output must be uint8 [number of IDs, row bytes]")
++        unique = np.unique(flat).tolist()
++        if unique and (unique[0] < 0 or unique[-1] >= self.rows):
++            raise IndexError("PLE row ID outside checkpoint table")
++        found = {}
++        missing = []
++        for row in unique:
++            cached = self.cache.get(row)
++            if cached is None:
++                missing.append(row)
++            else:
++                found[row] = cached
++                self.cache.move_to_end(row)
++        self.hits += len(found)
++        self.reads += len(missing)
++        if missing:
++            # Keep only workers tasks queued, even for a large prefill.
++            active_workers = min(self.workers, len(missing))
++            if len(missing) < 1024:
++                active_workers = min(active_workers, 8)
++            results: Iterable[list[tuple[int, bytes]]]
++            if self._native is not None:
++                results = [self._native.read(missing)]
++            else:
++                assert self._pool is not None
++                chunks = [missing[i::active_workers] for i in range(active_workers)]
++                results = self._pool.map(self._read_rows, chunks)
++            for result in results:
++                for row, data in result:
++                    found[row] = data
++                    if self.cache_limit:
++                        self.cache[row] = data
++                        if len(self.cache) > self.cache_limit:
++                            self.cache.popitem(last=False)
++        data = b"".join(found[row] for row in flat.tolist())
++        output.reshape(-1)[:] = np.frombuffer(data, dtype=np.uint8)
++
++    def close(self) -> None:
++        if self._pool is not None:
++            self._pool.shutdown(wait=True)
++        if self._native is not None:
++            self._native.close()
++        for fd in self._fds.values():
++            os.close(fd)
++        self._fds.clear()
++
++
++class PLEPromptPrefetcher:
++    """Warm a bounded prefix of known prompt rows while CUDA executes chunks."""
++
++    def __init__(self, ngram: Qwen4ExpNGramEmbedding, limit: int) -> None:
++        self.table = ngram.ngram_embedding._table
++        self.ngram = copy.copy(ngram)
++        self.ngram._modules = {}
++        self.ngram._parameters = {}
++        self.ngram._buffers = {k: v.detach().cpu() for k, v in ngram._buffers.items()}
++        self.limit = min(limit, self.table.cache_limit // (2 * ngram.ngram_heads))
++        self._pool = ThreadPoolExecutor(1, thread_name_prefix="ple-prompt")
++        self._future: Future | None = None
++        self._stop = threading.Event()
++        self._request_id: str | None = None
++
++    def submit(self, request_id: str, tokens: list[int], start: int) -> None:
++        if min(self.limit, len(tokens) - start) < 2048:
++            return
++        if self._future is not None:
++            if not self._future.done():
++                return
++            self._future.result()
++        history = min(start, self.ngram.ngram_size - 1)
++        tokens = tokens[start - history : start + self.limit]
++        self._request_id = request_id
++        self._stop.clear()
++        self._future = self._pool.submit(self._prefetch, tokens, history)
++
++    @torch.inference_mode()
++    def _prefetch(self, tokens: list[int], history: int) -> None:
++        ngram = self.ngram
++        context = [ngram.eos_token_id] * (ngram.ngram_size - 1 - history)
++        context += tokens[:history]
++        ids = ngram.compute_ngram_ids(
++            torch.tensor(tokens[history:]),
++            torch.tensor([0, len(tokens) - history]),
++            torch.tensor([context]),
++        ).numpy()
++        for start in range(0, len(ids), 256):
++            if self._stop.is_set():
++                return
++            batch = ids[start : start + 256]
++            output = np.empty((batch.size, self.table.row_bytes), dtype=np.uint8)
++            self.table.read(batch, output, prefetch=True)
++
++    def cancel(self, request_id: str) -> None:
++        if request_id == self._request_id:
++            self._stop.set()
++
++    def close(self) -> None:
++        self._stop.set()
++        self._pool.shutdown(wait=True)
++        if self._future is not None:
++            self._future.result()
++
++
++class Qwen4ExpPLESSDEmbedding(Qwen4ExpPLEEmbedding):
++    """Prefetch SSD rows while the preceding decoder layer executes on CUDA."""
++
++    supports_prefetch: ClassVar[bool] = True
++
++    def __init__(self, *args, **kwargs) -> None:
++        config = get_current_vllm_config()
++        if config.parallel_config.tensor_parallel_size != 1 or (
++            config.parallel_config.data_parallel_size != 1
++        ):
++            raise ValueError("PLE SSD offload currently requires TP=DP=1")
++        super().__init__(*args, **kwargs)
++        if self.weight.dtype != torch.bfloat16:
++            raise ValueError("PLE SSD offload currently requires BF16 embeddings")
++        options = config.additional_config
++        self._table = PLESSDTable(
++            config.model_config.model,
++            kwargs["prefix"],
++            self.org_vocab_size,
++            self.embedding_dim,
++            int(options.get("ple_ssd_workers", 8)),
++            int(options.get("ple_ssd_cache_mb", 128)),
++            options.get("ple_ssd_native_library"),
++            int(options.get("ple_ssd_io_depth", 256)),
++        )
++        self.prompt_prefetcher: PLEPromptPrefetcher | None = None
++        self._device = torch.device("cuda", torch.cuda.current_device())
++        shape = (kwargs["max_total_tokens"], kwargs["num_ngram_heads"])
++        self._ids = torch.empty(shape, dtype=torch.int64, device="cpu", pin_memory=True)
++        self._device_ids = torch.empty_like(self._ids, device=self._device)
++        self._host = torch.empty(
++            (*shape, self.embedding_dim),
++            dtype=torch.bfloat16,
++            device="cpu",
++            pin_memory=True,
++        )
++        self._gpu = torch.empty_like(self._host, device=self._device)
++        self._stream = torch.cuda.Stream(device=self._device)
++        self._ids_ready = torch.cuda.Event()
++        self._copy_ready = torch.cuda.Event()
++        self._previous_use = torch.cuda.Event()
++        self._previous_use.record()
++        self._pending: Future | None = None
++        self._coordinator = ThreadPoolExecutor(1, thread_name_prefix="ple-ssd-prefetch")
++        self._loaded_starts: set[int] = set()
++        logger.info(
++            "PLE SSD: %.2f GiB on disk, %d I/O workers, %d MiB row cache",
++            self.org_vocab_size * self._table.row_bytes / 2**30,
++            self._table.workers,
++            int(options.get("ple_ssd_cache_mb", 128)),
++        )
++        if self._table._native is not None:
++            logger.info(
++                "PLE SSD uses native Linux AIO, queue depth %d",
++                int(options.get("ple_ssd_io_depth", 256)),
++            )
++
++    def allocate_embedding_weight(self, num_embeddings, embedding_dim, dtype):
++        return torch.empty(num_embeddings, embedding_dim, dtype=dtype, device="meta")
++
++    def weight_loader(self, param, loaded_weight, checkpoint_start=None) -> None:
++        if checkpoint_start is None or loaded_weight.dtype != torch.bfloat16:
++            raise ValueError("PLE SSD requires checkpoint-split BF16 weights")
++        self._loaded_starts.add(checkpoint_start)
++
++    def _read_and_copy(self, tokens: int) -> None:
++        self._ids_ready.synchronize()
++        self._table.read(
++            self._ids[:tokens].numpy(),
++            self._host[:tokens]
++            .view(torch.uint8)
++            .numpy()
++            .reshape(-1, self._table.row_bytes),
++        )
++        self._copy_to_gpu(tokens)
++
++    def _copy_to_gpu(self, tokens: int) -> None:
++        with torch.cuda.device(self._device), torch.cuda.stream(self._stream):
++            self._gpu[:tokens].copy_(self._host[:tokens], non_blocking=True)
++            self._copy_ready.record(self._stream)
++
++    @partial(eager_break_during_capture, always=True)
++    def start_prefetch(self, hidden_states, ngram_ids) -> None:
++        if torch.cuda.is_current_stream_capturing():
++            raise RuntimeError("PLE SSD requires eager or breakable CUDA graphs")
++        if self._pending is not None:
++            raise RuntimeError("Previous PLE SSD lookup has not been consumed")
++        if len(self._loaded_starts) != len(self._table._parts):
++            raise RuntimeError("PLE checkpoint shards have not all been loaded")
++        tokens = ngram_ids.shape[0]
++        if tokens > self._ids.shape[0]:
++            raise ValueError("PLE SSD prefetch exceeds configured token capacity")
++        if BreakableCUDAGraphCapture.current() is not None:
++            # Captured ID-producing kernels have not executed yet. Actual
++            # lookups start on replay, when those kernels have run.
++            return
++        # Host staging must outlive H2D; device staging must outlive its consumer.
++        self._copy_ready.synchronize()
++        self._stream.wait_event(self._previous_use)
++        # Preserve IDs before the next graph segment reuses their pool slot.
++        self._device_ids[:tokens].copy_(ngram_ids)
++        self._stream.wait_stream(torch.cuda.current_stream())
++        with torch.cuda.stream(self._stream):
++            self._ids[:tokens].copy_(self._device_ids[:tokens], non_blocking=True)
++            self._ids_ready.record(self._stream)
++        self._pending = self._coordinator.submit(self._read_and_copy, tokens)
++
++    @partial(eager_break_during_capture, always=True)
++    def _finalize_prefetch(self, output: torch.Tensor) -> None:
++        if BreakableCUDAGraphCapture.current() is not None:
++            output.zero_()
++            return
++        if self._pending is None:
++            raise RuntimeError("PLE SSD lookup was not prefetched")
++        self._pending.result()
++        self._pending = None
++        torch.cuda.current_stream().wait_event(self._copy_ready)
++        output.copy_(self._gpu[: output.shape[0]].flatten(-2))
++        self._previous_use.record()
++
++    def forward(self, hidden_states: torch.Tensor) -> torch.Tensor:
++        output = torch.empty(
++            (hidden_states.shape[0], self._gpu.shape[1] * self.embedding_dim),
++            dtype=self.weight.dtype,
++            device=hidden_states.device,
++        )
++        self._finalize_prefetch(output)
++        return output
++
++    def close(self) -> None:
++        self._coordinator.shutdown(wait=True)
++        try:
++            if self.prompt_prefetcher is not None:
++                self.prompt_prefetcher.close()
++            self._stream.synchronize()
++        finally:
++            self._table.close()
+diff --git a/vllm/models/qwen4_exp/nvidia/ple_ssd_io.c b/vllm/models/qwen4_exp/nvidia/ple_ssd_io.c
+new file mode 100644
+index 0000000..75c5ea3
+--- /dev/null
++++ b/vllm/models/qwen4_exp/nvidia/ple_ssd_io.c
+@@ -0,0 +1,113 @@
++// SPDX-License-Identifier: Apache-2.0
++// SPDX-FileCopyrightText: Copyright contributors to the vLLM project
++/* Read-only Linux AIO for exact BF16 rows in a safetensors checkpoint. */
++#define _GNU_SOURCE
++#include <errno.h>
++#include <linux/aio_abi.h>
++#include <stdint.h>
++#include <stdlib.h>
++#include <string.h>
++#include <sys/syscall.h>
++#include <unistd.h>
++
++struct reader {
++  aio_context_t ctx;
++  unsigned depth;
++  unsigned char* buf;
++  struct iocb *cbs, **ptrs;
++  struct io_event* events;
++};
++void rows_close(struct reader* r) {
++  if (!r) return;
++  if (r->ctx) syscall(__NR_io_destroy, r->ctx);
++  free(r->buf);
++  free(r->cbs);
++  free(r->ptrs);
++  free(r->events);
++  free(r);
++}
++struct reader* rows_open(unsigned depth) {
++  if (!depth || depth > 4096) {
++    errno = EINVAL;
++    return NULL;
++  }
++  struct reader* r = calloc(1, sizeof(*r));
++  if (!r) return NULL;
++  r->depth = depth;
++  r->cbs = calloc(depth, sizeof(*r->cbs));
++  r->ptrs = calloc(depth, sizeof(*r->ptrs));
++  r->events = calloc(depth, sizeof(*r->events));
++  int err = posix_memalign((void**)&r->buf, 4096, (size_t)depth * 8192);
++  if (err || !r->cbs || !r->ptrs || !r->events) {
++    rows_close(r);
++    errno = err ? err : ENOMEM;
++    return NULL;
++  }
++  if (syscall(__NR_io_setup, depth, &r->ctx) < 0) {
++    err = errno;
++    rows_close(r);
++    errno = err;
++    return NULL;
++  }
++  return r;
++}
++int rows_read(struct reader* r, const int* fds, const uint64_t* offsets,
++              unsigned count, unsigned row_bytes, unsigned char* out) {
++  if (!r->ctx) return -EBADF;
++  if (!row_bytes || row_bytes > 4096) return -EINVAL;
++  int error = 0;
++  for (unsigned base = 0; base < count && !error; base += r->depth) {
++    unsigned batch = count - base < r->depth ? count - base : r->depth;
++    memset(r->cbs, 0, batch * sizeof(*r->cbs));
++    for (unsigned j = 0; j < batch; ++j) {
++      struct iocb* cb = &r->cbs[j];
++      cb->aio_data = j;
++      cb->aio_lio_opcode = IOCB_CMD_PREAD;
++      cb->aio_fildes = fds[base + j];
++      cb->aio_buf = (uint64_t)(uintptr_t)(r->buf + (size_t)j * 8192);
++      cb->aio_offset = offsets[base + j] & ~(uint64_t)4095;
++      cb->aio_nbytes = ((offsets[base + j] & 4095) + row_bytes + 4095) & ~4095;
++      r->ptrs[j] = cb;
++    }
++    unsigned submitted = 0, complete = 0;
++    while (complete < batch) {
++      if (submitted < batch) {
++        long rc = syscall(__NR_io_submit, r->ctx, batch - submitted,
++                          r->ptrs + submitted);
++        if (rc > 0)
++          submitted += rc;
++        else if (rc < 0 && errno == EINTR)
++          continue;
++        else if (rc <= 0 &&
++                 (rc == 0 || errno != EAGAIN || submitted == complete)) {
++          error = rc < 0 ? -errno : -EIO;
++          goto failed;
++        }
++      }
++      long n = syscall(__NR_io_getevents, r->ctx, 1, submitted - complete,
++                       r->events, NULL);
++      if (n < 0) {
++        if (errno == EINTR) continue;
++        error = -errno;
++        goto failed;
++      }
++      for (long i = 0; i < n; ++i) {
++        struct io_event* e = &r->events[i];
++        unsigned j = e->data;
++        size_t delta = offsets[base + j] & 4095;
++        if (e->res < (int64_t)(delta + row_bytes))
++          error = e->res < 0 ? e->res : -EIO;
++        else
++          memcpy(out + (size_t)(base + j) * row_bytes,
++                 r->buf + (size_t)j * 8192 + delta, row_bytes);
++      }
++      complete += n;
++    }
++  }
++  return error;
++failed:
++  /* io_destroy waits for outstanding requests before buffers can be reused. */
++  syscall(__NR_io_destroy, r->ctx);
++  r->ctx = 0;
++  return error;
++}

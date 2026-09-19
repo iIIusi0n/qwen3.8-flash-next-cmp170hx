@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+*.so
+.env
+.env.*
+*.token
+*.safetensors
+models/
+optimization/

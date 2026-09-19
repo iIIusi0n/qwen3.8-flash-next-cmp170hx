@@ -1,0 +1,59 @@
+{
+  "date": "2026-09-19",
+  "vllm_revision": "a5a30471ff2bb7f0824f2da10e358af98d304472",
+  "vllm_version": "0.29.1rc1.dev402+ga5a30471f.ple1",
+  "model_repo": "klee100/Qwen3.8-Flash-Next-AutoRound-3bpw-MTP",
+  "model_revision": "ce0e0b94083895bd836b916f29bf105c40a8162a",
+  "patch_sha256": "09c4e13fbd2b77169a7f8cb28d36242cc6e3916fe9c5a3c25d8e90101a38ccb0",
+  "checkpoint_file_count": 13,
+  "checkpoint_file_bytes": 153012762024,
+  "checkpoint_tensor_bytes": 152981659128,
+  "gpu": {
+    "reported_name": "NVIDIA Graphics Device",
+    "compute_capability": "8.0",
+    "vram_gib": 64,
+    "power_limit_w": 180,
+    "driver": "610.43.03"
+  },
+  "host": {
+    "vcpus": 4,
+    "ram_gib": 15,
+    "swap_gib": 31,
+    "storage": "Enterprise SATA SSD exposed as QEMU block device"
+  },
+  "versions": {
+    "python": "3.12.13",
+    "torch": "2.13.0",
+    "torch_cuda": "13.0",
+    "cuda_toolkit": "13.3",
+    "transformers": "5.17.0",
+    "humming_kernels": "0.1.12"
+  },
+  "final_settings": {
+    "mtp_tokens": 1,
+    "max_num_seqs": 16,
+    "max_num_batched_tokens": 2048,
+    "max_model_len": 262144,
+    "gpu_memory_utilization": 0.96,
+    "graph_mode": "FULL_AND_PIECEWISE",
+    "aio_depth": 256,
+    "cache_mb": 512,
+    "prefetch_tokens": 16384
+  },
+  "final_validation": {
+    "requests": 134,
+    "api_errors": 0,
+    "aborts": 0,
+    "preemptions": 0,
+    "smoke_checks_passed": 6,
+    "ssd_tests_passed": 10,
+    "graph_tests_passed": 21,
+    "mixed_requests": 9,
+    "mixed_elapsed_s": 10.634229857940227
+  },
+  "limits": [
+    "Arithmetic prompt inconsistent in both tested graph modes.",
+    "Full 262144-token request not tested.",
+    "CUPTI unavailable on this GPU; stage timings include dispatch-induced GPU idle."
+  ]
+}

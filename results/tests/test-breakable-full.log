@@ -1,0 +1,15 @@
+.....................                                                    [100%]
+=============================== warnings summary ===============================
+../.venv/lib/python3.12/site-packages/torch/jit/_script.py:365: 14 warnings
+  ${VLLM_WORKDIR}/.venv/lib/python3.12/site-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+    warnings.warn(
+
+tests/v1/cudagraph/test_breakable_cudagraph.py::test_thread_local_active_during_context
+tests/v1/cudagraph/test_breakable_cudagraph.py::test_nested_capture_raises
+tests/v1/cudagraph/test_breakable_cudagraph.py::test_active_state_isolated_across_threads
+tests/v1/cudagraph/test_breakable_cudagraph.py::test_exception_in_body_clears_active
+  ${VLLM_WORKDIR}/.venv/lib/python3.12/site-packages/torch/cuda/graphs.py:169: UserWarning: The CUDA Graph is empty. This usually means that the graph was attempted to be captured on wrong device or stream. (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/cuda/CUDAGraph.cpp:210.)
+    super().capture_end()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+21 passed, 18 warnings in 12.46s

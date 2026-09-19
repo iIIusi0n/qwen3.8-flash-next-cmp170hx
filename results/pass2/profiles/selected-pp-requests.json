@@ -1,0 +1,76 @@
+{
+  "name": "selected-pp",
+  "elapsed_s": 6.223031984060071,
+  "results": [
+    {
+      "kind": "pp",
+      "elapsed_s": 3.139699128922075,
+      "response": {
+        "id": "cmpl-b65aa5d8f1f01783",
+        "object": "text_completion",
+        "created": 1789826084,
+        "model": "Qwen3.8-Flash-Next",
+        "choices": [
+          {
+            "index": 0,
+            "text": " ",
+            "logprobs": null,
+            "finish_reason": "length",
+            "stop_reason": null,
+            "token_ids": null,
+            "prompt_logprobs": null,
+            "prompt_token_ids": null,
+            "routed_experts": null
+          }
+        ],
+        "service_tier": null,
+        "system_fingerprint": "vllm-0.29.1rc1.dev402+ga5a30471f.ple1-7bf047f6",
+        "usage": {
+          "prompt_tokens": 8192,
+          "total_tokens": 8193,
+          "completion_tokens": 1,
+          "prompt_tokens_details": null,
+          "completion_tokens_details": null
+        },
+        "kv_transfer_params": null,
+        "ec_transfer_params": null,
+        "metrics": null
+      }
+    },
+    {
+      "kind": "pp",
+      "elapsed_s": 3.0829487680457532,
+      "response": {
+        "id": "cmpl-a55e55cc313353e7",
+        "object": "text_completion",
+        "created": 1789826087,
+        "model": "Qwen3.8-Flash-Next",
+        "choices": [
+          {
+            "index": 0,
+            "text": "om",
+            "logprobs": null,
+            "finish_reason": "length",
+            "stop_reason": null,
+            "token_ids": null,
+            "prompt_logprobs": null,
+            "prompt_token_ids": null,
+            "routed_experts": null
+          }
+        ],
+        "service_tier": null,
+        "system_fingerprint": "vllm-0.29.1rc1.dev402+ga5a30471f.ple1-7bf047f6",
+        "usage": {
+          "prompt_tokens": 8192,
+          "total_tokens": 8193,
+          "completion_tokens": 1,
+          "prompt_tokens_details": null,
+          "completion_tokens_details": null
+        },
+        "kv_transfer_params": null,
+        "ec_transfer_params": null,
+        "metrics": null
+      }
+    }
+  ]
+}
