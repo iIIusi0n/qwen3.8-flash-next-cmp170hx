@@ -1,6 +1,18 @@
 # Qwen3.8 Flash Next on CMP 170HX
 
-[Hugging Face model](https://huggingface.co/klee100/Qwen3.8-Flash-Next-AutoRound-3bpw-MTP)
+**Base models:** the official [Qwen/Qwen3.8-Flash-Next](https://huggingface.co/Qwen/Qwen3.8-Flash-Next)
+(quantized by AutoRound in the main checkpoint) and
+[orcarouter/Qwen3.8-Flash-Next-Uncensored](https://huggingface.co/orcarouter/Qwen3.8-Flash-Next-Uncensored)
+— OrcaRouter's BF16 abliterated build of the same Qwen base, quantized in the
+uncensored checkpoint. Lineage: **Qwen (official) → OrcaRouter (uncensored
+fine-tune) → AutoRound quantization**.
+
+**Checkpoints:**
+· [Qwen3.8-Flash-Next-AutoRound-3bpw-MTP](https://huggingface.co/klee100/Qwen3.8-Flash-Next-AutoRound-3bpw-MTP)
+(official-Qwen base)
+· [Qwen3.8-Flash-Next-Uncensored-AutoRound-3bpw-MTP](https://huggingface.co/klee100/Qwen3.8-Flash-Next-Uncensored-AutoRound-3bpw-MTP)
+(OrcaRouter base)
+
 · [Full vLLM patch](patches/qwen38-ple-ssd.patch)
 · [Setup guide](docs/GUIDE.md)
 
